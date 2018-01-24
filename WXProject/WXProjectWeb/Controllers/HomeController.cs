@@ -8,6 +8,10 @@ namespace WXProjectWeb.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// sssss
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
