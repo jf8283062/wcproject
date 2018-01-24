@@ -12,7 +12,7 @@ namespace WXProjectWeb.Controllers
         {
             return View();
         }
-
+        //test
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
