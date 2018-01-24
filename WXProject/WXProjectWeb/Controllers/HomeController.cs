@@ -8,11 +8,15 @@ namespace WXProjectWeb.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// sssss
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
         }
-
+        //test
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
