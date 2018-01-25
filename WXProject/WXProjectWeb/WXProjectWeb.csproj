@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="img\" />
     <Folder Include="Models\" />
     <Folder Include="Views\WXCheck\" />
   </ItemGroup>
@@ -205,6 +206,12 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modal\Modal.csproj">
+      <Project>{2d2a0092-4b48-4ef8-a5b4-80ffedbc474a}</Project>
+      <Name>Modal</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
