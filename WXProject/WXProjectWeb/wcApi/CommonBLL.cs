@@ -12,9 +12,10 @@ namespace WXProjectWeb.wcApi
 {
     public class CommonBLL
     {
-        public readonly static string token = "jiaofeng";
-        public readonly static string APIkey = "bce5a7b4-a168-4ca1-9462-79462b739b38";
-        public readonly string APIsecrit = "76b16982-af5a-448a-9939-106a01488cde";
+        public readonly static string Token = System.Configuration.ConfigurationManager.AppSettings["Token"];
+        public readonly static string AppID = System.Configuration.ConfigurationManager.AppSettings["AppID"];
+        public readonly string EncodingAESKey = System.Configuration.ConfigurationManager.AppSettings["EncodingAESKey"]; 
+
         /// <summary>
         /// 加密验证
         /// </summary>
@@ -26,7 +27,7 @@ namespace WXProjectWeb.wcApi
         public static bool CheckSignature(string signature, string timestamp, string nonce)
         {
             List<string> list = new List<string>();
-            list.Add(token);
+            list.Add(Token);
             list.Add(timestamp);
             list.Add(nonce);
             list.Sort();
