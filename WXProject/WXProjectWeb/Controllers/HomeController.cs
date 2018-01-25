@@ -16,6 +16,7 @@ namespace WXProjectWeb.Controllers
         {
             return View();
             ///adssa
+            ///hui test
         }
         //test
         public ActionResult About()
