@@ -22,7 +22,7 @@ namespace WXProjectWeb.Controllers
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
      
             //string token = CommonBLL.GetAccess_token("","");
-            //string ticket = CommonBLL.GetQrcode(token, "hello");
+            //string ticket = CommonBLL.GetQrcode(token, 123);
             //string path = CommonBLL.GetQrcodePic(ticket);
 
 

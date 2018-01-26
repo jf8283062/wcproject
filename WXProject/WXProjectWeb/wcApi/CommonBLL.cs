@@ -132,7 +132,7 @@ namespace WXProjectWeb.wcApi
         /// <param name="access_token"></param>
         /// <param name="scene_str"></param>
         /// <returns></returns>
-        public static string GetQrcode(string access_token, string scene_str)
+        public static string Get_LIMIT_STR_Qrcode(string access_token, string scene_str)
         {
             string ticket = "";
             string qrcodeUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
@@ -153,6 +153,26 @@ namespace WXProjectWeb.wcApi
         }
 
 
+        public static string GetQrcode(string access_token, int scene_id)
+        {
+            string ticket = "";
+            string qrcodeUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
+            qrcodeUrl = string.Format(qrcodeUrl, access_token);
+
+            var data = new {  action_name = "QR_LIMIT_SCENE", action_info = new { scene = new { scene_id = scene_id } } };
+            var json = JsonConvert.SerializeObject(data);
+
+            string content = GetInfomation(qrcodeUrl, json);
+
+            if (content.IndexOf("ticket") > -1)
+            {
+                JObject job = (JObject)JsonConvert.DeserializeObject(content);
+                ticket = job["ticket"].ToString();
+                ticket = Uri.EscapeDataString(ticket);
+            }
+            return ticket;
+        }
+
         public static string GetQrcodePic(string ticket)
         {
             string Picurl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket + "";
@@ -168,6 +188,24 @@ namespace WXProjectWeb.wcApi
             string path = HttpContext.Current.Server.MapPath("~/img/" + newfilename);
             img.Save(path);
             return path;
+        }
+
+
+        /// <summary>
+        /// 获取用户基本信息
+        /// </summary>
+        /// <param name="access_token">接口凭证</param>
+        /// <param name="openId">普通用户的标识，对当前公众号唯一</param>
+        public UserInfo GetUserDetail(string access_token, string openId)
+        {
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/user/info?access_token={0}&openid={1}&lang=zh_CN",
+                   access_token, openId);
+
+            string content = GetInfomation(url);
+
+            UserInfo user = JsonConvert.DeserializeObject<UserInfo>(content);
+
+            return user;
         }
 
 
