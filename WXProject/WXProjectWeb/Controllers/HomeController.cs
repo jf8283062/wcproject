@@ -1,7 +1,9 @@
 ﻿using Modal;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -17,6 +19,8 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
+     
             //string token = CommonBLL.GetAccess_token("","");
             //string ticket = CommonBLL.GetQrcode(token, "hello");
             //string path = CommonBLL.GetQrcodePic(ticket);
@@ -36,7 +40,7 @@ namespace WXProjectWeb.Controllers
             #endregion
 
 
- 
+
 
 
 
