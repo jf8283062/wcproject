@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Modal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using WXProjectWeb.wcApi;
 
 namespace WXProjectWeb.Controllers
@@ -15,28 +17,32 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            string token = CommonBLL.GetAccess_token("","");
-            string ticket = CommonBLL.GetQrcode(token, "hello");
-            string path = CommonBLL.GetQrcodePic(ticket);
+            //string token = CommonBLL.GetAccess_token("","");
+            //string ticket = CommonBLL.GetQrcode(token, "hello");
+            //string path = CommonBLL.GetQrcodePic(ticket);
 
 
-            return View();
-            ///adssa
-            ///hui test
+            #region 微信验证URL
+
+            //// 微信加密签名
+            //string signature = Request["SIGNATURE"];
+            //// 时间戮
+            //string timestamp = Request["TIMESTAMP"];
+            //// 随机数
+            //string nonce = Request["NONCE"];
+            //// 随机字符串
+            //string echostr = Request["echostr"];
+            //var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
+            #endregion
+
+
+ 
+
+
+
+            return Content("ok");
+
         }
-        //test
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

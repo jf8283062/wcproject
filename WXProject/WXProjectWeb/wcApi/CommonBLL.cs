@@ -14,7 +14,8 @@ namespace WXProjectWeb.wcApi
     {
         public readonly static string Token = System.Configuration.ConfigurationManager.AppSettings["Token"];
         public readonly static string AppID = System.Configuration.ConfigurationManager.AppSettings["AppID"];
-        public readonly string EncodingAESKey = System.Configuration.ConfigurationManager.AppSettings["EncodingAESKey"]; 
+        public readonly static string Secret = System.Configuration.ConfigurationManager.AppSettings["Secret"];
+        public readonly static string EncodingAESKey = System.Configuration.ConfigurationManager.AppSettings["EncodingAESKey"];
 
         /// <summary>
         /// 加密验证
@@ -56,12 +57,10 @@ namespace WXProjectWeb.wcApi
         /// <param name="appid">开发者ID</param>
         /// <param name="appsecret">开发者密码</param>
         /// <returns></returns>
-        public static string GetAccess_token(string appid, string secret)
+        public static string GetAccess_token()
         {
             string access_token = ""; //获取的access_token;
-             appid =string.IsNullOrEmpty(appid)?"wxc4c7440bca3101a6":appid; //公众号appid
-             secret = string.IsNullOrEmpty(secret) ? "381010e26151aedf8ae531500d668513":secret;  //公众号appsecret
-            string strUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + secret;
+            string strUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppID + "&secret=" + Secret;
 
             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(strUrl);
             req.Method = "GET";
@@ -160,7 +159,7 @@ namespace WXProjectWeb.wcApi
             req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0";
             req.Headers.Add("Accept-Language", "zh-cn,en-us;q=0.8,zh-hk;q=0.6,ja;q=0.4,zh;q=0.2");
             req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
- 
+
 
             System.Drawing.Image img = System.Drawing.Image.FromStream(req.GetResponse().GetResponseStream());
             string newfilename = DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".jpg";
