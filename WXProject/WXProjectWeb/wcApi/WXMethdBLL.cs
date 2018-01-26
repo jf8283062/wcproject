@@ -32,7 +32,7 @@ namespace WXProjectWeb.wcApi
         /// 将XML 转入事件列表
         /// </summary>
         /// <param name="xml"></param>
-        public static void SetQueue(string xml)
+        public static EventBase CreateMessage(string xml)
         {
             if (_queue == null)
             {
@@ -48,19 +48,55 @@ namespace WXProjectWeb.wcApi
             var MsgId = xdoc.Element("MsgId").Value;
             var CreateTime = xdoc.Element("CreateTime").Value;
             MsgType type = (MsgType)Enum.Parse(typeof(MsgType), msgtype);
-            if (type != MsgType.EVENT)
+            if (type == MsgType.EVENT)
             {
-                if (_queue.FirstOrDefault(m => { return m.MsgFlag == MsgId; }) == null)
+                if (_queue.FirstOrDefault(m => { return m.MsgFlag == CreateTime; }) == null)
                 {
                     _queue.Add(new BaseMsg
                     {
                         CreateTime = DateTime.Now,
                         FromUser = FromUserName,
-                        MsgFlag = MsgId
+                        MsgFlag = CreateTime
                     });
                 }
+                else
+                {
+                    return null;
+                }
             }
-           
+            switch (type)
+            {
+                //case MsgType.TEXT: return CommonBLL.ConvertObj<TextMessage>(xml);
+                //case MsgType.IMAGE: return CommonBLL.ConvertObj<ImgMessage>(xml);
+                //case MsgType.VIDEO: return CommonBLL.ConvertObj<VideoMessage>(xml);
+                //case MsgType.VOICE: return CommonBLL.ConvertObj<VoiceMessage>(xml);
+                //case MsgType.LINK:
+                //    return CommonBLL.ConvertObj<LinkMessage>(xml);
+                //case MsgType.LOCATION:
+                //    return CommonBLL.ConvertObj<LocationMessage>(xml);
+                case MsgType.EVENT://事件类型
+                    {
+                        var eventtype = (Event)Enum.Parse(typeof(Event), xdoc.Element("Event").Value.ToUpper());
+                        switch (eventtype)
+                        {
+                            //case Event.CLICK:
+                            //    return CommonBLL.ConvertObj<NormalMenuEventMessage>(xml);
+                            //case Event.VIEW: return CommonBLL.ConvertObj<NormalMenuEventMessage>(xml);
+                            //case Event.LOCATION: return CommonBLL.ConvertObj<LocationEventMessage>(xml);
+                            //case Event.LOCATION_SELECT: return CommonBLL.ConvertObj<LocationMenuEventMessage>(xml);
+                            case Event.SCAN: return CommonBLL.ConvertObj<ScanEventMessage>(xml);
+                            //case Event.SUBSCRIBE: return CommonBLL.ConvertObj<SubEventMessage>(xml);
+                            //case Event.UNSUBSCRIBE: return CommonBLL.ConvertObj<SubEventMessage>(xml);
+                            //case Event.SCANCODE_WAITMSG: return CommonBLL.ConvertObj<ScanMenuEventMessage>(xml);
+                            default:
+                                return CommonBLL.ConvertObj<EventBase>(xml);
+                        }
+                    }
+                default:
+                    return CommonBLL.ConvertObj<EventBase>(xml);
+            }
         }
+
+
     }
 }

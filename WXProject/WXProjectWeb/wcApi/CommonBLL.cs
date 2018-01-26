@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Modal;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Xml.Linq;
 
 namespace WXProjectWeb.wcApi
 {
@@ -166,6 +168,45 @@ namespace WXProjectWeb.wcApi
             string path = HttpContext.Current.Server.MapPath("~/img/" + newfilename);
             img.Save(path);
             return path;
+        }
+
+
+        /// <summary>
+        /// 转换xml到实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlstr"></param>
+        /// <returns></returns>
+        public static T ConvertObj<T>(string xmlstr)
+        {
+            XElement xdoc = XElement.Parse(xmlstr);
+            var type = typeof(T);
+            var t = Activator.CreateInstance<T>();
+            foreach (XElement element in xdoc.Elements())
+            {
+                var pr = type.GetProperty(element.Name.ToString());
+                if (element.HasElements)
+                {//这里主要是兼容微信新添加的菜单类型。nnd，竟然有子属性，所以这里就做了个子属性的处理
+                    foreach (var ele in element.Elements())
+                    {
+                        pr = type.GetProperty(ele.Name.ToString());
+                        pr.SetValue(t, Convert.ChangeType(ele.Value, pr.PropertyType), null);
+                    }
+                    continue;
+                }
+                if (pr.PropertyType.Name == "MsgType")//获取消息模型
+                {
+                    pr.SetValue(t, (MsgType)Enum.Parse(typeof(MsgType), element.Value.ToUpper()), null);
+                    continue;
+                }
+                if (pr.PropertyType.Name == "Event")//获取事件类型。
+                {
+                    pr.SetValue(t, (Event)Enum.Parse(typeof(Event), element.Value.ToUpper()), null);
+                    continue;
+                }
+                pr.SetValue(t, Convert.ChangeType(element.Value, pr.PropertyType), null);
+            }
+            return t;
         }
     }
 }
