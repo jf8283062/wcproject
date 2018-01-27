@@ -50,6 +50,7 @@
     <Compile Include="QrcodeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeiXinEvent\ScanEventMessage.cs" />
+    <Compile Include="WeiXinEvent\SubscribeEvent.cs" />
     <Compile Include="WeiXinRequest\ContentRequest.cs" />
     <Compile Include="WeiXinRequest\ImageReuquest.cs" />
     <Compile Include="WeiXinRequest\WXRequestBase.cs" />

@@ -22,14 +22,14 @@ namespace WXProjectWeb.Controllers
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
             string text = sr.ReadToEnd();
             var eventmodel = WXMethdBLL.CreateMessage(text);
-            if (eventmodel is ScanEventMessage)
+            if (eventmodel is EventBase)
             {
-                ScanEventMessage model = eventmodel as ScanEventMessage;
+                EventBase model = eventmodel as EventBase;
                 WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                 {
                     FromUserName = model.ToUserName,
                     ToUserName = model.FromUserName,
-                    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.EventKey
+                    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
                 });
             }
 
