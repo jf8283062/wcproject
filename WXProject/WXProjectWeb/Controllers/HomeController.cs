@@ -21,17 +21,21 @@ namespace WXProjectWeb.Controllers
         {
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
             string text = sr.ReadToEnd();
-            var eventmodel = WXMethdBLL.CreateMessage(text);
-            if (eventmodel is EventBase)
+            if (!string.IsNullOrEmpty(text))
             {
-                EventBase model = eventmodel as EventBase;
-                WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                var eventmodel = WXMethdBLL.CreateMessage(text);
+                if (eventmodel is EventBase)
                 {
-                    FromUserName = model.ToUserName,
-                    ToUserName = model.FromUserName,
-                    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
-                });
+                    EventBase model = eventmodel as EventBase;
+                    WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
+                    });
+                }
             }
+           
 
 
 
