@@ -1,4 +1,5 @@
 ﻿using Modal;
+using Modal.WeiXinEvent;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -239,7 +240,7 @@ namespace WXProjectWeb.wcApi
                 }
                 if (pr.PropertyType.Name == "Event")//获取事件类型。
                 {
-                    pr.SetValue(t, (Event)Enum.Parse(typeof(Event), element.Value.ToUpper()), null);
+                    pr.SetValue(t, (EventEnum)Enum.Parse(typeof(EventEnum), element.Value.ToUpper()), null);
                     continue;
                 }
                 pr.SetValue(t, Convert.ChangeType(element.Value, pr.PropertyType), null);

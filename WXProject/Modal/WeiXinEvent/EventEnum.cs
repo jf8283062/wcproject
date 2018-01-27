@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Modal
+namespace Modal.WeiXinEvent
 {
     /// <summary>
     /// 事件类型枚举
     /// </summary>
-    public enum Event
+    public enum EventEnum
     {
         /// <summary>
         /// 非事件类型

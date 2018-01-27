@@ -20,7 +20,21 @@ namespace WXProjectWeb.Controllers
         public ActionResult Index()
         {
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
-     
+            string text = sr.ReadToEnd();
+            var eventmodel = WXMethdBLL.CreateMessage(text);
+            if (eventmodel is ScanEventMessage)
+            {
+                ScanEventMessage model = eventmodel as ScanEventMessage;
+                WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                {
+                    FromUserName = model.ToUserName,
+                    ToUserName = model.FromUserName,
+                    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.EventKey
+                });
+            }
+
+
+
             //string token = CommonBLL.GetAccess_token("","");
             //string ticket = CommonBLL.GetQrcode(token, 123);
             //string path = CommonBLL.GetQrcodePic(ticket);
@@ -28,15 +42,15 @@ namespace WXProjectWeb.Controllers
 
             #region 微信验证URL
 
-            //// 微信加密签名
-            //string signature = Request["SIGNATURE"];
-            //// 时间戮
-            //string timestamp = Request["TIMESTAMP"];
-            //// 随机数
-            //string nonce = Request["NONCE"];
-            //// 随机字符串
-            //string echostr = Request["echostr"];
-            //var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
+            // 微信加密签名
+            string signature = Request["SIGNATURE"];
+            // 时间戮
+            string timestamp = Request["TIMESTAMP"];
+            // 随机数
+            string nonce = Request["NONCE"];
+            // 随机字符串
+            string echostr = Request["echostr"];
+            var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
             #endregion
 
 

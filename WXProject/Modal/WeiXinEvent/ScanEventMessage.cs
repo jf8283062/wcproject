@@ -12,7 +12,7 @@ namespace Modal
     public class ScanEventMessage:EventBase
     {
         /// <summary>
-        /// 事件KEY值，是一个32位无符号整数，即创建二维码时的二维码scene_id
+        /// 事件KEY值，qrscene_为前缀，后面为二维码的参数值
         /// </summary>
         public string EventKey { get; set; }
         /// <summary>
