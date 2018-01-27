@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Modal
 {
+    /// <summary>
+    /// 消息基类
+    /// </summary>
     public class BaseMsg
     {
         /// <summary>
