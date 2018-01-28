@@ -20,14 +20,7 @@ namespace WXProjectWeb.Controllers
         public ActionResult Index()
         {
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
-            //string text = sr.ReadToEnd();
-            var text = @"<xml><ToUserName><![CDATA[gh_46aebec19e92]]></ToUserName>
-<FromUserName><![CDATA[oVWwA0x8AB3fkTdokUxBflTkVIZk]]></FromUserName>
-<CreateTime>1517064817</CreateTime>
-<MsgType><![CDATA[event]]></MsgType>
-<Event><![CDATA[unsubscribe]]></Event>
-<EventKey><![CDATA[]]></EventKey>
-</xml>";
+            string text = sr.ReadToEnd();
             if (!string.IsNullOrEmpty(text))
             {
                 var eventmodel = WXMethdBLL.CreateMessage(text);
