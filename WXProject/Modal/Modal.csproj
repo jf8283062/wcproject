@@ -43,14 +43,14 @@
   <ItemGroup>
     <Compile Include="BaseMsg.cs" />
     <Compile Include="UserInfo.cs" />
-    <Compile Include="WeiXinEvent\ClickEventMessage.cs" />
+    <Compile Include="WeiXinEvent\ClickEvent.cs" />
     <Compile Include="WeiXinEvent\EventEnum.cs" />
     <Compile Include="WeiXinEvent\EventBase.cs" />
     <Compile Include="MsgType.cs" />
     <Compile Include="QrcodeInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WeiXinEvent\ScanEventMessage.cs" />
     <Compile Include="WeiXinEvent\SubscribeEvent.cs" />
+    <Compile Include="WeiXinEvent\UnsubscribeEvent.cs" />
     <Compile Include="WeiXinRequest\ContentRequest.cs" />
     <Compile Include="WeiXinRequest\ImageReuquest.cs" />
     <Compile Include="WeiXinRequest\WXRequestBase.cs" />

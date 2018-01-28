@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Modal.WeiXinEvent
 {
-    public class ClickEventMessage: EventBase
+    public class ClickEvent: EventBase
     {
         /// <summary>
         /// 事件KEY值，与自定义菜单接口中KEY值对应
