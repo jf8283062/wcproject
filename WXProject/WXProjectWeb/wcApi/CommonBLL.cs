@@ -128,18 +128,18 @@ namespace WXProjectWeb.wcApi
 
 
         /// <summary>
-        /// 获取永久二维码的ticket
+        /// 获取临时二维码的ticket
         /// </summary>
         /// <param name="access_token"></param>
         /// <param name="scene_str"></param>
         /// <returns></returns>
-        public static string Get_LIMIT_STR_Qrcode(string access_token, string scene_str)
+        public static string Get_QR_STR_SCENE_Qrcode(string access_token, string scene_str)
         {
             string ticket = "";
             string qrcodeUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
             qrcodeUrl = string.Format(qrcodeUrl, access_token);
 
-            var data = new { expire_seconds = 1800, action_name = "QR_LIMIT_STR_SCENE", action_info = new { scene = new { scene_str = scene_str } } };
+            var data = new { expire_seconds = 604800, action_name = "QR_STR_SCENE", action_info = new { scene = new { scene_str = scene_str } } };
             var json = JsonConvert.SerializeObject(data);
 
             string content = GetInfomation(qrcodeUrl, json);
@@ -153,14 +153,19 @@ namespace WXProjectWeb.wcApi
             return ticket;
         }
 
-
+        /// <summary>
+        /// 获取临时二维码的ticket
+        /// </summary>
+        /// <param name="access_token"></param>
+        /// <param name="scene_id"></param>
+        /// <returns></returns>
         public static string GetQrcode(string access_token, int scene_id)
         {
             string ticket = "";
             string qrcodeUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
             qrcodeUrl = string.Format(qrcodeUrl, access_token);
 
-            var data = new {  action_name = "QR_LIMIT_SCENE", action_info = new { scene = new { scene_id = scene_id } } };
+            var data = new { expire_seconds = 604800, action_name = "QR_SCENE", action_info = new { scene = new { scene_id = scene_id } } };
             var json = JsonConvert.SerializeObject(data);
 
             string content = GetInfomation(qrcodeUrl, json);
@@ -208,6 +213,9 @@ namespace WXProjectWeb.wcApi
 
             return user;
         }
+
+
+
 
 
         /// <summary>
