@@ -87,7 +87,7 @@ namespace WXProjectWeb.wcApi
         /// </summary>
         /// <param name="url"></param>
         /// <returns>返回一组json数据</returns>
-        private static string GetInfomation(string url)
+        public static string GetInfomation(string url)
         {
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
@@ -107,7 +107,7 @@ namespace WXProjectWeb.wcApi
         /// <param name="url"></param>
         /// <param name="postData"></param>
         /// <returns></returns>
-        private static string GetInfomation(string url, string postData)
+        public static string GetInfomation(string url, string postData)
         {
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
 
@@ -195,26 +195,6 @@ namespace WXProjectWeb.wcApi
             img.Save(path);
             return path;
         }
-
-
-        /// <summary>
-        /// 获取用户基本信息
-        /// </summary>
-        /// <param name="access_token">接口凭证</param>
-        /// <param name="openId">普通用户的标识，对当前公众号唯一</param>
-        public UserInfo GetUserDetail(string access_token, string openId)
-        {
-            string url = string.Format("https://api.weixin.qq.com/cgi-bin/user/info?access_token={0}&openid={1}&lang=zh_CN",
-                   access_token, openId);
-
-            string content = GetInfomation(url);
-
-            UserInfo user = JsonConvert.DeserializeObject<UserInfo>(content);
-
-            return user;
-        }
-
-
 
 
 

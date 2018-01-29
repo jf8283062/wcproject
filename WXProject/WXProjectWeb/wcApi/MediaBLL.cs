@@ -14,7 +14,7 @@ namespace WXProjectWeb.wcApi
     /// <summary>
     /// 多媒体文件接口
     /// </summary>
-    public class Media
+    public class MediaBLL
     {
         /// <summary>
         /// 临时素材media_id是可复用的
@@ -39,7 +39,7 @@ namespace WXProjectWeb.wcApi
                 string content = System.Text.Encoding.Default.GetString(responseArray, 0, responseArray.Length);
                 if (content.IndexOf("media_id") > -1)
                 {
-                    JObject jo = (JObject)JsonConvert.DeserializeObject(result);
+                    JObject jo = (JObject)JsonConvert.DeserializeObject(content);
                     result = jo["media_id"].ToString();
                 }
                 else
