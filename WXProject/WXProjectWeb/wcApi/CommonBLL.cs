@@ -221,17 +221,20 @@ namespace WXProjectWeb.wcApi
                     }
                     continue;
                 }
-                if (pr.PropertyType.Name == "MsgType")//获取消息模型
+                if (pr!=null&&pr.PropertyType!=null)
                 {
-                    pr.SetValue(t, (MsgType)Enum.Parse(typeof(MsgType), element.Value.ToUpper()), null);
-                    continue;
+                    if (pr.PropertyType.Name == "MsgType")//获取消息模型
+                    {
+                        pr.SetValue(t, (MsgType)Enum.Parse(typeof(MsgType), element.Value.ToUpper()), null);
+                        continue;
+                    }
+                    if (pr.PropertyType.Name == "Event")//获取事件类型。
+                    {
+                        pr.SetValue(t, (EventEnum)Enum.Parse(typeof(EventEnum), element.Value.ToUpper()), null);
+                        continue;
+                    }
+                    pr.SetValue(t, Convert.ChangeType(element.Value, pr.PropertyType), null);
                 }
-                if (pr.PropertyType.Name == "Event")//获取事件类型。
-                {
-                    pr.SetValue(t, (EventEnum)Enum.Parse(typeof(EventEnum), element.Value.ToUpper()), null);
-                    continue;
-                }
-                pr.SetValue(t, Convert.ChangeType(element.Value, pr.PropertyType), null);
             }
             return t;
         }
