@@ -27,19 +27,13 @@ namespace WXProjectWeb.Controllers
                 if (eventmodel != null&& eventmodel is EventBase)
                 {
                     EventBase model = eventmodel as EventBase;
-
-                    var test = @"<xml> <ToUserName>< ![CDATA["+model.FromUserName+@"] ]></ToUserName> <FromUserName>< ![CDATA["+model.ToUserName+"] ]></FromUserName> <CreateTime>"+WXMethdBLL.ConvertDateTimeInt(DateTime.Now)+ "</CreateTime> <MsgType>< ![CDATA[text] ]></MsgType> <Content>< ![CDATA["+ "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n] ]></Content> </xml>";
-
-                    Response.Write(test);
-                    Response.Flush();
-                    Response.End();
-
-                    //WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
-                    //{
-                    //    FromUserName = model.ToUserName,
-                    //    ToUserName = model.FromUserName,
-                    //    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
-                    //});
+                    var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
+                    });
+                    return Content("resStr");
                 }
             }
 

@@ -103,7 +103,7 @@ namespace WXProjectWeb.wcApi
         /// 回复消息
         /// </summary>
         /// <param name="weixinXML"></param>
-        public static void ResponseMsg(WXRequestBase request)
+        public static string ResponseMsg(WXRequestBase request)
         {
             string responseContent = String.Empty;
             switch (request.MsgType)
@@ -127,9 +127,7 @@ namespace WXProjectWeb.wcApi
                     }
                     break;
             }
-
-            HttpContext.Current.Response.ContentEncoding = Encoding.UTF8;
-            HttpContext.Current.Response.Write(responseContent);
+            return responseContent;
         }
 
         //返回格式化文本XML内容
