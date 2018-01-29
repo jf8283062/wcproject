@@ -111,19 +111,19 @@ namespace WXProjectWeb.wcApi
                 case "text":
                     {
                         var x = request as ContentRequest;
-                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, request.MsgType, x.Content, null, 1111);
+                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, "text", x.Content, null);
                     }
                     break;
                 case "image":
                     {
                         var x = request as ImageReuquest;
-                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, request.MsgType, null, x.MediaId, 1111);
+                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, "image", null, x.MediaId);
                     }
                     break;
                 default:
                     {
                         var x = request as ContentRequest;
-                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, request.MsgType, x.Content, null, 1111);
+                        responseContent = FormatTextXML(request.FromUserName, request.ToUserName, request.MsgType, x.Content, null);
                     }
                     break;
             }
@@ -131,13 +131,19 @@ namespace WXProjectWeb.wcApi
         }
 
         //返回格式化文本XML内容
-        private static String FormatTextXML(string fromUserName, string toUserName, string MsgType, string content, string MediaId, long number)
+        private static String FormatTextXML(string fromUserName, string toUserName, string MsgType, string content, string MediaId)
         {
 
             StringBuilder sb = new StringBuilder();
+
+//            @"<xml><ToUserName><![CDATA[gh_46aebec19e92]]></ToUserName>
+//<FromUserName><![CDATA[oVWwA0x8AB3fkTdokUxBflTkVIZk]]></FromUserName>
+//<CreateTime>1517205478</CreateTime>
+//<MsgType><![CDATA[text]]></MsgType> <Content><![CDATA[你好！！]]></Content></xml>"
+
             sb.Append("<xml>");
-            sb.Append("<ToUserName><![CDATA[" + fromUserName + "]]></ToUserName>");
-            sb.Append("<FromUserName><![CDATA[" + toUserName + "]]></FromUserName>");
+            sb.Append("<ToUserName><![CDATA[" + toUserName + "]]></ToUserName>");
+            sb.Append("<FromUserName><![CDATA[" + fromUserName + "]]></FromUserName>");
             sb.Append("<CreateTime>" + ConvertDateTimeInt(DateTime.Now) + "</CreateTime>");
             sb.Append("<MsgType><![CDATA[" + MsgType + "]]></MsgType>");
             if (!string.IsNullOrEmpty(content))
@@ -146,9 +152,9 @@ namespace WXProjectWeb.wcApi
             }
             if (!string.IsNullOrEmpty(MediaId))
             {
-                sb.Append("<Content><![CDATA[" + MediaId + "]]></Content>");
+                sb.Append("<MediaId><![CDATA[" + MediaId + "]]></MediaId>");
             }
-            sb.Append("<MsgId>" + number + "</MsgId>");
+            
             sb.Append("</xml>");
 
             return sb.ToString();

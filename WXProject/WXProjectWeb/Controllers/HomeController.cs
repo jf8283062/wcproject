@@ -24,29 +24,36 @@ namespace WXProjectWeb.Controllers
             if (!string.IsNullOrEmpty(text))
             {
                 var eventmodel = WXMethdBLL.CreateMessage(text);
-                if (eventmodel != null&& eventmodel is EventBase)
+                if (eventmodel != null&& eventmodel is SubscribeEvent)
+                {
+                    SubscribeEvent model = eventmodel as SubscribeEvent;
+                    var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        Content = model.Event +":"+ model.EventKey??"没有key"
+                    });
+                    return Content(resStr);
+                }
+                else
                 {
                     EventBase model = eventmodel as EventBase;
                     var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
+                        Content = "hi"
                     });
-                    return Content("resStr");
+                    return Content(resStr);
                 }
             }
 
 
 
-
-            //string token = CommonBLL.GetAccess_token("","");
-            //string ticket = CommonBLL.GetQrcode(token, 123);
-            //string path = CommonBLL.GetQrcodePic(ticket);
+            
 
 
             #region 微信验证URL
-
             // 微信加密签名
             string signature = Request["SIGNATURE"];
             // 时间戮
@@ -56,14 +63,8 @@ namespace WXProjectWeb.Controllers
             // 随机字符串
             string echostr = Request["echostr"];
             var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
-            #endregion
-
-
-
-
-
-
-            return Content("");
+            return Content(re);
+            #endregion            
 
         }
 
