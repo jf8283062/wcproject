@@ -53,7 +53,8 @@ namespace WXProjectWeb.wcApi
             var FromUserName = xdoc.Element("FromUserName").Value;
             var CreateTime = xdoc.Element("CreateTime").Value;
             MsgType type = (MsgType)Enum.Parse(typeof(MsgType), msgtype);
-            if (type == MsgType.EVENT)
+            //type == MsgType.EVENT
+            if (true)
             {
                 switch (type)
                 {
@@ -155,7 +156,7 @@ namespace WXProjectWeb.wcApi
             return sb.ToString();
         }
 
-        private static int ConvertDateTimeInt(System.DateTime time)
+        public static int ConvertDateTimeInt(System.DateTime time)
         {
             System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1));
             return (int)(time - startTime).TotalSeconds;
