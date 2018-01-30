@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,35 +28,68 @@ namespace WXProjectWeb.Controllers
             if (!string.IsNullOrEmpty(text))
             {
                 var eventmodel = WXMethdBLL.CreateMessage(text);
-                if (eventmodel != null&& eventmodel is EventBase)
+                if (eventmodel != null && eventmodel is SubscribeEvent)
+                {
+                    SubscribeEvent model = eventmodel as SubscribeEvent;
+                    var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        Content = model.Event + ":" + model.EventKey ?? "没有key"
+                    });
+                    return Content(resStr);
+                }
+                else
                 {
                     EventBase model = eventmodel as EventBase;
-
-                    var test = @"<xml> <ToUserName>< ![CDATA["+model.FromUserName+@"] ]></ToUserName> <FromUserName>< ![CDATA["+model.ToUserName+"] ]></FromUserName> <CreateTime>"+WXMethdBLL.ConvertDateTimeInt(DateTime.Now)+ "</CreateTime> <MsgType>< ![CDATA[text] ]></MsgType> <Content>< ![CDATA["+ "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n] ]></Content> </xml>";
-
-                    Response.Write(test);
-                    Response.Flush();
-                    Response.End();
-
-                    //WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
-                    //{
-                    //    FromUserName = model.ToUserName,
-                    //    ToUserName = model.FromUserName,
-                    //    Content = "ToUserName:" + model.ToUserName + "    /r/n" + "FromUserName:" + model.FromUserName + "    /r/n" + "EventKey:" + model.Event
-                    //});
+                    var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        Content = "hi"
+                    });
+                    return Content(resStr);
                 }
             }
 
 
+            var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
+            FileStream fs = new FileStream(bgpath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.Read(data, 0, data.Length);
+            fs.Close();
+            fs.Dispose();
+            MemoryStream ms = new MemoryStream(data);
+
+            var touXiangPath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "touxiang.jpg";
+            FileStream fsTouXiang = new FileStream(touXiangPath, FileMode.Open);
+            byte[] dataTouXiang = new byte[fsTouXiang.Length];
+            fsTouXiang.Read(dataTouXiang, 0, dataTouXiang.Length);
+            fsTouXiang.Close();
+            fsTouXiang.Dispose();
+            MemoryStream mstouxiang = new MemoryStream(dataTouXiang);
+            var erweima = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "erweima.jpg";
+            FileStream fserweima = new FileStream(erweima, FileMode.Open);
+            byte[] dataerweima = new byte[fserweima.Length];
+            fserweima.Read(dataerweima, 0, dataerweima.Length);
+            fserweima.Close();
+            fserweima.Dispose();
+            MemoryStream mserweima = new MemoryStream(dataerweima);
 
 
-            //string token = CommonBLL.GetAccess_token("","");
-            //string ticket = CommonBLL.GetQrcode(token, 123);
-            //string path = CommonBLL.GetQrcodePic(ticket);
+
+            var outsteam = ImgCom.ImgCommon.AddWaterPic(ms, mstouxiang, mserweima, "张辉", "测试内容就是这样");
+            
+
+                return File(outsteam, "image/jpeg");
+
+
+
+
+
 
 
             #region 微信验证URL
-
             // 微信加密签名
             string signature = Request["SIGNATURE"];
             // 时间戮
@@ -65,14 +99,8 @@ namespace WXProjectWeb.Controllers
             // 随机字符串
             string echostr = Request["echostr"];
             var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
+            return Content(re);
             #endregion
-
-
-
-
-
-
-            return Content("");
 
         }
 
@@ -104,7 +132,7 @@ namespace WXProjectWeb.Controllers
             {
                 UserBLL.SaveUsers(user);
             }
-
+            
 
 
             //DataSet ds = DbHelperSQL.Query("select * from UserInfo where openid='" + openid + "'");
