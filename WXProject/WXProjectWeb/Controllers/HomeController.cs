@@ -1,6 +1,9 @@
 ﻿using Modal;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -85,23 +88,34 @@ namespace WXProjectWeb.Controllers
             /// feng_open_id "oVWwA0x8AB3fkTdokUxBflTkVIZk"
             string openid = "oVWwA044l4_gH37FSmlyqvF04LX0";
 
-            if (DbHelperSQL.Query("select * from UserInfo where openid='" + openid + "'").Tables[0].Rows.Count > 0)
+
+            string token = CommonBLL.GetAccess_token();
+
+            UserInfo user = UserBLL.GetUserDetail(token, openid);
+
+            UserInfo us = UserBLL.GetUserInfo(user.openid);
+
+            if (us != null)
             {
-                UserBLL.UpdateUser(new UserInfo() { openid = openid });
+                us.count = us.count + 1;
+                UserBLL.ModifyUsers(us);
             }
             else
             {
-                UserBLL.AddUser(new UserInfo() { openid = openid });
+                UserBLL.SaveUsers(user);
             }
-            
 
 
 
-            //string token = CommonBLL.GetAccess_token();
-
-            //UserInfo user = UserBLL.GetUserDetail(token, openid);
-
-
+            //DataSet ds = DbHelperSQL.Query("select * from UserInfo where openid='" + openid + "'");
+            //if (ds.Tables[0].Rows.Count > 0)
+            //{
+            //    UserBLL.UpdateUser(new UserInfo() { openid = openid, count = int.Parse(ds.Tables[0].Rows[0]["count"].ToString()) + 1 });
+            //}
+            //else
+            //{
+            //    UserBLL.AddUser(new UserInfo() { openid = openid,count=0});
+            //}
 
             //string ticket = CommonBLL.Get_QR_STR_SCENE_Qrcode(token, openid);
             //string path = CommonBLL.GetQrcodePic(ticket);

@@ -69,14 +69,12 @@ namespace WXProjectWeb.wcApi
             using (WebResponse wr = req.GetResponse())
             {
                 HttpWebResponse myResponse = (HttpWebResponse)req.GetResponse();
-
                 strpath = myResponse.ResponseUri.ToString();
 
                 WebClient mywebclient = new WebClient();
 
                 try
                 {
-
                     mywebclient.DownloadFile(strpath, savepath + media_id + ".amr");
 
                     return true;
