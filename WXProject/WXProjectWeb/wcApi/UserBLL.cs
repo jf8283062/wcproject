@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Data.Entity;
+using System.IO;
 
 namespace WXProjectWeb.wcApi
 {
@@ -32,6 +33,14 @@ namespace WXProjectWeb.wcApi
         }
 
 
+        public static Stream GetTouxiang(string url)
+        {
+            System.Net.WebRequest webreq = System.Net.WebRequest.Create(url);
+            System.Net.WebResponse webres = webreq.GetResponse();
+            System.IO.Stream stream = webres.GetResponseStream();
+
+            return stream;
+        }
 
 
         public static UserInfo GetUserInfo(string openid)
