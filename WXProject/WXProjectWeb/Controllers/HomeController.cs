@@ -1,6 +1,7 @@
 ﻿using Modal;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,14 +25,14 @@ namespace WXProjectWeb.Controllers
             if (!string.IsNullOrEmpty(text))
             {
                 var eventmodel = WXMethdBLL.CreateMessage(text);
-                if (eventmodel != null&& eventmodel is SubscribeEvent)
+                if (eventmodel != null && eventmodel is SubscribeEvent)
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
                     var resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = model.Event +":"+ model.EventKey??"没有key"
+                        Content = model.Event + ":" + model.EventKey ?? "没有key"
                     });
                     return Content(resStr);
                 }
@@ -49,8 +50,40 @@ namespace WXProjectWeb.Controllers
             }
 
 
+            var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
+            FileStream fs = new FileStream(bgpath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.Read(data, 0, data.Length);
+            fs.Close();
+            fs.Dispose();
+            MemoryStream ms = new MemoryStream(data);
+
+            var touXiangPath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "touxiang.jpg";
+            FileStream fsTouXiang = new FileStream(touXiangPath, FileMode.Open);
+            byte[] dataTouXiang = new byte[fsTouXiang.Length];
+            fsTouXiang.Read(dataTouXiang, 0, dataTouXiang.Length);
+            fsTouXiang.Close();
+            fsTouXiang.Dispose();
+            MemoryStream mstouxiang = new MemoryStream(dataTouXiang);
+            var erweima = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "erweima.jpg";
+            FileStream fserweima = new FileStream(erweima, FileMode.Open);
+            byte[] dataerweima = new byte[fserweima.Length];
+            fserweima.Read(dataerweima, 0, dataerweima.Length);
+            fserweima.Close();
+            fserweima.Dispose();
+            MemoryStream mserweima = new MemoryStream(dataerweima);
+
+
+
+            var outsteam = ImgCom.ImgCommon.AddWaterPic(ms, mstouxiang, mserweima, "张辉", "测试内容就是这样");
+            
+
+                return File(outsteam, "image/jpeg");
 
             
+
+
+
 
 
             #region 微信验证URL
