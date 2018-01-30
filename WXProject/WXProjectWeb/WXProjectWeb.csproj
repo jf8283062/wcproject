@@ -150,7 +150,9 @@
     <Compile Include="ImgCom\ImgCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="wcApi\CommonBLL.cs" />
+    <Compile Include="wcApi\DbHelperSQL.cs" />
     <Compile Include="wcApi\MediaBLL.cs" />
+    <Compile Include="wcApi\UserBLL.cs" />
     <Compile Include="wcApi\WXMethdBLL.cs" />
   </ItemGroup>
   <ItemGroup>

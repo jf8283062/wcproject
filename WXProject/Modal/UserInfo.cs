@@ -60,5 +60,10 @@ namespace Modal
         /// 用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
         /// </summary>
         public long subscribe_time { get; set; }
+
+        /// <summary>
+        /// 通过分享二维码后关注用户的数量
+        /// </summary>
+        public int count { get; set; }
     }
 }
