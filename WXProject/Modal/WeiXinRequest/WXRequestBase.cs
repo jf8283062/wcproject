@@ -31,6 +31,6 @@ namespace Modal.WeiXinRequest
         /// <summary>
         /// 消息类型
         /// </summary>
-        public string MsgType { get { return "image"; } }
+        public string MsgType { get; set; }
     }
 }
