@@ -31,10 +31,6 @@ namespace Modal.WeiXinRequest
         /// <summary>
         /// 消息类型
         /// </summary>
-        public string MsgType { set; get; }
-        /// <summary>
-        /// 消息id，64位整型
-        /// </summary>
-        public long MsgId { set; get; }
+        public string MsgType { get { return "image"; } }
     }
 }

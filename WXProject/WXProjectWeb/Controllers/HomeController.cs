@@ -32,6 +32,7 @@ namespace WXProjectWeb.Controllers
                     };
             }
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
+            var _token = Access_token.FirstOrDefault().Key;
             string text = sr.ReadToEnd();
             if (!string.IsNullOrEmpty(text))
             {
@@ -43,13 +44,14 @@ namespace WXProjectWeb.Controllers
                     if (string.IsNullOrWhiteSpace(model.EventKey))
                     {
                         var user = UserBLL.GetUserInfo(model.EventKey);
+                        user.count = user.count + 1;
                         UserBLL.UpdateUser(user);
                     }
                     else
                     {
-                        var user = UserBLL.GetUserDetail(Access_token.FirstOrDefault().Key,eventmodel.FromUserName);
+                        var user = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                         user.count = 0;
-                        UserBLL.UpdateUser(user);
+                        UserBLL.AddUser(user);
 
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
@@ -68,26 +70,29 @@ namespace WXProjectWeb.Controllers
                     fs.Read(data, 0, data.Length);
                     fs.Close();
                     fs.Dispose();
-                    MemoryStream ms = new MemoryStream(data);
-
-                    EventBase model = eventmodel as EventBase;
-
-                    var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(Access_token.FirstOrDefault().Key, model.FromUserName);
-                    var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
-                    var user = UserBLL.GetUserInfo(model.FromUserName);
-
-                    var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
-
-                    var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
-
-                    //MediaBLL.UploadMultimedia()
-
-                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    using (MemoryStream ms = new MemoryStream(data))
                     {
-                        FromUserName = model.ToUserName,
-                        ToUserName = model.FromUserName,
-                        Content = "hi"
-                    });
+                        EventBase model = eventmodel as EventBase;
+
+                        var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
+                        var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
+                        var user = UserBLL.GetUserInfo(model.FromUserName);
+
+                        var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
+
+                        var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
+                        var mid = "";
+                        using (MemoryStream msout = new MemoryStream(bg))
+                        {
+                            mid = MediaBLL.UploadMultimedia(_token, "image", user.openid + "img", msout);
+                        }
+                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
+                        {
+                            FromUserName = model.ToUserName,
+                            ToUserName = model.FromUserName,
+                            MediaId = mid
+                        });
+                    }
                 }
                 return Content(resStr);
 
