@@ -171,7 +171,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="img\20180130113657.png" />
     <Content Include="img\backGroudImd.jpg" />
     <Content Include="img\erweima.jpg" />
     <Content Include="img\touxiang.jpg" />
