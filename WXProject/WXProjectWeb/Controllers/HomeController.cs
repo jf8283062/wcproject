@@ -72,9 +72,8 @@ namespace WXProjectWeb.Controllers
                     var fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                     if (fromUser == null)
                     {
-                        var user = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
-                        user.count = 0;
-                        UserBLL.SaveUsers(user);
+                        fromUser.count = 0;
+                        UserBLL.SaveUsers(fromUser);
 
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
