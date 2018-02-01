@@ -66,9 +66,11 @@ namespace WXProjectWeb.Controllers
                     if (!string.IsNullOrWhiteSpace(model.EventKey))
                     {
                         var user = UserBLL.GetUserInfo(model.EventKey);
+                        user.count = user.count + 1;
                         UserBLL.UpdateUser(user);
                     }
-                    else
+                    var fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
+                    if (fromUser == null)
                     {
                         var user = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                         user.count = 0;
@@ -79,7 +81,7 @@ namespace WXProjectWeb.Controllers
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "感谢关注！回复任意消息可以获得定制二维码"
+                        Content = "感谢关注！回复任意消息可以获得定制二维码！"
                     });
                     return Content(resStr);
                 }
