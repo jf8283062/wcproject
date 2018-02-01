@@ -63,18 +63,18 @@ namespace WXProjectWeb.Controllers
                 if (eventmodel != null && eventmodel is SubscribeEvent)
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
-                    if (!string.IsNullOrWhiteSpace(model.EventKey))
-                    {
-                        var user = UserBLL.GetUserInfo(model.EventKey);
-                        user.count = user.count + 1;
-                        UserBLL.UpdateUser(user);
-                    }
-                    var fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
+                    var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
                     if (fromUser == null)
                     {
+                        fromUser = UserBLL.GetUserDetail(_token,eventmodel.FromUserName);
                         fromUser.count = 0;
                         UserBLL.SaveUsers(fromUser);
-
+                        if (!string.IsNullOrWhiteSpace(model.EventKey))
+                        {
+                            var user = UserBLL.GetUserInfo(model.EventKey);
+                            user.count = user.count + 1;
+                            UserBLL.UpdateUser(user);
+                        }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
