@@ -96,7 +96,7 @@ namespace WXProjectWeb.Controllers
 
                     var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
 
-                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName, bg);
+                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName+".jpg", bg);
 
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
                     {

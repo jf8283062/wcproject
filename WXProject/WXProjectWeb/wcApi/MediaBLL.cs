@@ -135,52 +135,47 @@ namespace WXProjectWeb.wcApi
             string result = "";
 
             string url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" + access_token + "&type=" + Type;
-            try
+
+            // 设置参数
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            CookieContainer cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            request.AllowAutoRedirect = true;
+            request.Method = "POST";
+            string boundary = DateTime.Now.Ticks.ToString("X"); // 随机分隔线
+            request.ContentType = "multipart/form-data;charset=utf-8;boundary=" + boundary;
+            byte[] itemBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "\r\n");
+            byte[] endBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "--\r\n");
+
+            StringBuilder sbHeader = new StringBuilder(string.Format("Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\nContent-Type:application/octet-stream\r\n\r\n", filename));
+            byte[] postHeaderBytes = Encoding.UTF8.GetBytes(sbHeader.ToString());
+
+            Stream postStream = request.GetRequestStream();
+            postStream.Write(itemBoundaryBytes, 0, itemBoundaryBytes.Length);
+            postStream.Write(postHeaderBytes, 0, postHeaderBytes.Length);
+            postStream.Write(bArr, 0, bArr.Length);
+            postStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length);
+            postStream.Close();
+
+            //发送请求并获取相应回应数据
+            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            //直到request.GetResponse()程序才开始向目标网页发送Post请求
+            Stream instream = response.GetResponseStream();
+            StreamReader sr = new StreamReader(instream, Encoding.UTF8);
+            //返回结果网页（html）代码
+            string content = sr.ReadToEnd();
+
+            if (content.IndexOf("media_id") > -1)
             {
-                // 设置参数
-                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-                CookieContainer cookieContainer = new CookieContainer();
-                request.CookieContainer = cookieContainer;
-                request.AllowAutoRedirect = true;
-                request.Method = "POST";
-                string boundary = DateTime.Now.Ticks.ToString("X"); // 随机分隔线
-                request.ContentType = "multipart/form-data;charset=utf-8;boundary=" + boundary;
-                byte[] itemBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "\r\n");
-                byte[] endBoundaryBytes = Encoding.UTF8.GetBytes("\r\n--" + boundary + "--\r\n");
-
-                StringBuilder sbHeader = new StringBuilder(string.Format("Content-Disposition:form-data;name=\"file\";filename=\"{0}\"\r\nContent-Type:application/octet-stream\r\n\r\n", filename));
-                byte[] postHeaderBytes = Encoding.UTF8.GetBytes(sbHeader.ToString());
-
-                Stream postStream = request.GetRequestStream();
-                postStream.Write(itemBoundaryBytes, 0, itemBoundaryBytes.Length);
-                postStream.Write(postHeaderBytes, 0, postHeaderBytes.Length);
-                postStream.Write(bArr, 0, bArr.Length);
-                postStream.Write(endBoundaryBytes, 0, endBoundaryBytes.Length);
-                postStream.Close();
-
-                //发送请求并获取相应回应数据
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                //直到request.GetResponse()程序才开始向目标网页发送Post请求
-                Stream instream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(instream, Encoding.UTF8);
-                //返回结果网页（html）代码
-                string content = sr.ReadToEnd();
-
-                if (content.IndexOf("media_id") > -1)
-                {
-                    JObject jo = (JObject)JsonConvert.DeserializeObject(content);
-                    result = jo["media_id"].ToString();
-                }
-                else
-                {
-                    JObject jo = (JObject)JsonConvert.DeserializeObject(result);
-                    result = jo["errmsg"].ToString();
-                }
+                JObject jo = (JObject)JsonConvert.DeserializeObject(content);
+                result = jo["media_id"].ToString();
             }
-            catch (Exception ex)
+            else
             {
-                result = "Error:" + ex.Message;
+                JObject jo = (JObject)JsonConvert.DeserializeObject(result);
+                result = jo["errmsg"].ToString();
             }
+
             return result;
         }
 
