@@ -91,6 +91,11 @@ namespace WXProjectWeb.Controllers
                     var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
                     var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                     var user = UserBLL.GetUserInfo(model.FromUserName);
+                    if (user==null)
+                    {
+                        user = UserBLL.GetUserDetail(_token, model.FromUserName);
+                        UserBLL.AddUser(user);
+                    }
 
                     var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
 
