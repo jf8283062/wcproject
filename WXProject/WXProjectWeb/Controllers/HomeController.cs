@@ -64,23 +64,27 @@ namespace WXProjectWeb.Controllers
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
                     var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
+                    string log = "";
                     if (fromUser == null)
                     {
+                        
                         fromUser = UserBLL.GetUserDetail(_token,eventmodel.FromUserName);
                         fromUser.count = 0;
                         UserBLL.SaveUsers(fromUser);
                         if (!string.IsNullOrWhiteSpace(model.EventKey))
                         {
+                            model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_")+1);
                             var user = UserBLL.GetUserInfo(model.EventKey);
                             user.count = user.count + 1;
-                            UserBLL.UpdateUser(user);
+                            var countx = UserBLL.UpdateUser(user);
+                            log = log + "影响行数" + countx;
                         }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "感谢关注！回复任意消息可以获得定制二维码！"
+                        Content = "感谢关注！回复任意消息可以获得定制二维码！" + model.EventKey + "    "+ log
                     });
                     return Content(resStr);
                 }
