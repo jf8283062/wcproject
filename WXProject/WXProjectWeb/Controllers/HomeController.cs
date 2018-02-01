@@ -17,19 +17,42 @@ namespace WXProjectWeb.Controllers
 {
     public class HomeController : Controller
     {
+        public static MemoryStream ms = null;
+
         public static Dictionary<string, DateTime> Access_token = null;
+
+
+        public HomeController()
+        {
+            if (ms == null)
+            {
+                var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
+                FileStream fs = new FileStream(bgpath, FileMode.Open);
+                byte[] data = new byte[fs.Length];
+                fs.Read(data, 0, data.Length);
+                fs.Close();
+                fs.Dispose();
+                ms = new MemoryStream(data);
+            }
+
+        }
         /// <summary>
         /// sssss
         /// </summary>
         /// <returns></returns>
         public ActionResult Index()
         {
+            string _token = "";
             if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
             {
                 var token = CommonBLL.GetAccess_token();
                 Access_token = new Dictionary<string, DateTime>() {
                     { token, DateTime.Now.AddSeconds(7000) }
                     };
+            }
+            else
+            {
+                _token = Access_token.FirstOrDefault().Key;
             }
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
             string text = sr.ReadToEnd();
@@ -40,16 +63,16 @@ namespace WXProjectWeb.Controllers
                 if (eventmodel != null && eventmodel is SubscribeEvent)
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
-                    if (string.IsNullOrWhiteSpace(model.EventKey))
+                    if (!string.IsNullOrWhiteSpace(model.EventKey))
                     {
                         var user = UserBLL.GetUserInfo(model.EventKey);
                         UserBLL.UpdateUser(user);
                     }
                     else
                     {
-                        var user = UserBLL.GetUserDetail(Access_token.FirstOrDefault().Key,eventmodel.FromUserName);
+                        var user = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                         user.count = 0;
-                        UserBLL.UpdateUser(user);
+                        UserBLL.SaveUsers(user);
 
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
@@ -62,17 +85,10 @@ namespace WXProjectWeb.Controllers
                 }
                 else
                 {
-                    var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
-                    FileStream fs = new FileStream(bgpath, FileMode.Open);
-                    byte[] data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
-                    fs.Close();
-                    fs.Dispose();
-                    MemoryStream ms = new MemoryStream(data);
 
                     EventBase model = eventmodel as EventBase;
 
-                    var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(Access_token.FirstOrDefault().Key, model.FromUserName);
+                    var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
                     var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                     var user = UserBLL.GetUserInfo(model.FromUserName);
 
@@ -80,17 +96,22 @@ namespace WXProjectWeb.Controllers
 
                     var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
 
-                    //MediaBLL.UploadMultimedia()
+                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName, bg);
 
-                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "hi"
+                        MediaId = x
                     });
-                }
-                return Content(resStr);
+                    return Content(resStr);
 
+                }
+
+            }
+            else
+            {
+                return Content("");
             }
 
 
@@ -134,7 +155,7 @@ namespace WXProjectWeb.Controllers
             //// 随机字符串
             //string echostr = Request["echostr"];
             //var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
-            return Content("123");
+            //return Content("123");
             //#endregion
 
         }
