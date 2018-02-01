@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using WXProjectWeb.wcApi;
 
 namespace WXProjectWeb.Controllers
@@ -11,15 +14,10 @@ namespace WXProjectWeb.Controllers
     {
         public string WeiXin()
         {
-            // 微信加密签名
-            string signature = Request["SIGNATURE"];
-            // 时间戮
-            string timestamp = Request["TIMESTAMP"];
-            // 随机数
-            string nonce = Request["NONCE"];
-            // 随机字符串
-            string echostr = Request["echostr"];
-            return CommonBLL.CheckSignature(signature, timestamp, nonce) ? echostr : "";
+            StreamReader sr = new StreamReader("", Encoding.Default);
+            string jsons = sr.ReadToEnd();
+            var res = CommonBLL.GetInfomation("https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+HomeController.Access_token.FirstOrDefault().Key, jsons);
+            return res;
         }
 
     }
