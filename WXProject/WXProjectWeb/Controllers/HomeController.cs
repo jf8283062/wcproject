@@ -17,13 +17,32 @@ namespace WXProjectWeb.Controllers
 {
     public class HomeController : Controller
     {
+        public static MemoryStream ms = null;
+
         public static Dictionary<string, DateTime> Access_token = null;
+
+
+        public HomeController()
+        {
+            if (ms == null)
+            {
+                var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
+                FileStream fs = new FileStream(bgpath, FileMode.Open);
+                byte[] data = new byte[fs.Length];
+                fs.Read(data, 0, data.Length);
+                fs.Close();
+                fs.Dispose();
+                ms = new MemoryStream(data);
+            }
+
+        }
         /// <summary>
         /// sssss
         /// </summary>
         /// <returns></returns>
         public ActionResult Index()
         {
+            string _token = "";
             if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
             {
                 var token = CommonBLL.GetAccess_token();
@@ -31,8 +50,11 @@ namespace WXProjectWeb.Controllers
                     { token, DateTime.Now.AddSeconds(7000) }
                     };
             }
+            else
+            {
+                _token = Access_token.FirstOrDefault().Key;
+            }
             StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
-            var _token = Access_token.FirstOrDefault().Key;
             string text = sr.ReadToEnd();
             if (!string.IsNullOrEmpty(text))
             {
@@ -41,61 +63,61 @@ namespace WXProjectWeb.Controllers
                 if (eventmodel != null && eventmodel is SubscribeEvent)
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
-                    if (string.IsNullOrWhiteSpace(model.EventKey))
+                    var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
+                    if (fromUser == null)
                     {
-                        var user = UserBLL.GetUserInfo(model.EventKey);
-                        user.count = user.count + 1;
-                        UserBLL.UpdateUser(user);
-                    }
-                    else
-                    {
-                        var user = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
-                        user.count = 0;
-                        UserBLL.AddUser(user);
-
+                        fromUser = UserBLL.GetUserDetail(_token,eventmodel.FromUserName);
+                        fromUser.count = 0;
+                        UserBLL.SaveUsers(fromUser);
+                        if (!string.IsNullOrWhiteSpace(model.EventKey))
+                        {
+                            var user = UserBLL.GetUserInfo(model.EventKey);
+                            user.count = user.count + 1;
+                            UserBLL.UpdateUser(user);
+                        }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "感谢关注！回复任意消息可以获得定制二维码"
+                        Content = "感谢关注！回复任意消息可以获得定制二维码！"
                     });
                     return Content(resStr);
                 }
                 else
                 {
-                    var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "backGroudImd.jpg";
-                    FileStream fs = new FileStream(bgpath, FileMode.Open);
-                    byte[] data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
-                    fs.Close();
-                    fs.Dispose();
-                    using (MemoryStream ms = new MemoryStream(data))
+
+                    EventBase model = eventmodel as EventBase;
+
+                    var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
+                    var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
+                    var user = UserBLL.GetUserInfo(model.FromUserName);
+                    if (user==null)
                     {
-                        EventBase model = eventmodel as EventBase;
-
-                        var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
-                        var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
-                        var user = UserBLL.GetUserInfo(model.FromUserName);
-
-                        var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
-
-                        var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
-                        var mid = "";
-                        using (MemoryStream msout = new MemoryStream(bg))
-                        {
-                            mid = MediaBLL.UploadMultimedia(_token, "image", user.openid + "img", msout);
-                        }
-                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
-                        {
-                            FromUserName = model.ToUserName,
-                            ToUserName = model.FromUserName,
-                            MediaId = mid
-                        });
+                        user = UserBLL.GetUserDetail(_token, model.FromUserName);
+                        UserBLL.AddUser(user);
                     }
-                }
-                return Content(resStr);
 
+                    var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
+
+                    var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
+
+                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName+".jpg", bg);
+
+                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
+                    {
+                        FromUserName = model.ToUserName,
+                        ToUserName = model.FromUserName,
+                        MediaId = x
+                    });
+                    return Content(resStr);
+
+                }
+
+            }
+            else
+            {
+                return Content("");
             }
 
 
@@ -139,7 +161,7 @@ namespace WXProjectWeb.Controllers
             //// 随机字符串
             //string echostr = Request["echostr"];
             //var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
-            return Content("123");
+            //return Content("123");
             //#endregion
 
         }
