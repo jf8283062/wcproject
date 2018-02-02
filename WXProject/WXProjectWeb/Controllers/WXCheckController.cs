@@ -14,7 +14,9 @@ namespace WXProjectWeb.Controllers
     {
         public string WeiXin()
         {
-            StreamReader sr = new StreamReader("", Encoding.Default);
+            var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\App_Data\\" + "button.json";
+
+            StreamReader sr = new StreamReader(bgpath, Encoding.Default);
             string jsons = sr.ReadToEnd();
             var res = CommonBLL.GetInfomation("https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+HomeController.Access_token.FirstOrDefault().Key, jsons);
             return res;
