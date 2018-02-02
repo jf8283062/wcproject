@@ -240,7 +240,20 @@ namespace WXProjectWeb.Controllers
             return Content(media_id);
         }
 
+        public ActionResult Test2()
+        {
+            /// hui_open id "oVWwA044l4_gH37FSmlyqvF04LX0"
+            /// feng_open_id "oVWwA0x8AB3fkTdokUxBflTkVIZk"
+            string openid = "oVWwA0x8AB3fkTdokUxBflTkVIZk";
 
+
+            string token = CommonBLL.GetAccess_token();
+
+           string content= CommonBLL.SendTemplateMsg(openid);
+
+            return Content(token);
+
+        }
 
     }
 }

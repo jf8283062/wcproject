@@ -19,6 +19,10 @@ namespace WXProjectWeb.wcApi
         public readonly static string AppID = System.Configuration.ConfigurationManager.AppSettings["AppID"];
         public readonly static string Secret = System.Configuration.ConfigurationManager.AppSettings["Secret"];
         public readonly static string EncodingAESKey = System.Configuration.ConfigurationManager.AppSettings["EncodingAESKey"];
+        /// <summary>
+        /// 成员加入提醒模板
+        /// </summary>
+        public readonly static string Template_id = System.Configuration.ConfigurationManager.AppSettings["Template_id"];
 
         /// <summary>
         /// 加密验证
@@ -127,7 +131,30 @@ namespace WXProjectWeb.wcApi
         }
 
 
-       
+        /// <summary>
+        /// 给指定用户发送模板消息  
+        /// 使用成员加入提醒模板
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public static string SendTemplateMsg(string openId)
+        {
+            string accesstoken = GetAccess_token();
+            string template_id = Template_id;
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}", accesstoken);
+
+            string firstvalue = "你有1位新朋友支持你啦!";
+            string keyword1value = "辉";
+            string keyword2value = "2014年9月22日 10:10:10";
+            string remarkvalue = "你还差3位小伙伴的支持可获得活动奖励";
+            var postData = new { touser = openId, template_id = template_id, url ="",data=new { first=new { value= firstvalue }, keyword1=new { value = keyword1value }, keyword2=new { value= keyword2value }, remark=new { value= remarkvalue } } };
+
+            var json = JsonConvert.SerializeObject(postData);
+
+            string content = CommonBLL.GetInfomation(url, json);
+
+            return content;
+        }
 
 
         /// <summary>
