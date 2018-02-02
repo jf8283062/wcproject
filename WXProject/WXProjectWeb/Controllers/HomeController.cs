@@ -64,23 +64,27 @@ namespace WXProjectWeb.Controllers
                 {
                     SubscribeEvent model = eventmodel as SubscribeEvent;
                     var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
+                    string log = "";
                     if (fromUser == null)
                     {
-                        fromUser = UserBLL.GetUserDetail(_token,eventmodel.FromUserName);
+
+                        fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                         fromUser.count = 0;
                         UserBLL.SaveUsers(fromUser);
                         if (!string.IsNullOrWhiteSpace(model.EventKey))
                         {
+                            model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_") + 1);
                             var user = UserBLL.GetUserInfo(model.EventKey);
                             user.count = user.count + 1;
-                            UserBLL.UpdateUser(user);
+                            var countx = UserBLL.UpdateUser(user);
+                            log = log + "影响行数" + countx;
                         }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                     {
                         FromUserName = model.ToUserName,
                         ToUserName = model.FromUserName,
-                        Content = "感谢关注！回复任意消息可以获得定制二维码！"
+                        Content = "感谢关注！回复任意消息可以获得定制二维码！" + model.EventKey + "    " + log
                     });
                     return Content(resStr);
                 }
@@ -92,7 +96,7 @@ namespace WXProjectWeb.Controllers
                     var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
                     var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                     var user = UserBLL.GetUserInfo(model.FromUserName);
-                    if (user==null)
+                    if (user == null)
                     {
                         user = UserBLL.GetUserDetail(_token, model.FromUserName);
                         UserBLL.AddUser(user);
@@ -102,7 +106,7 @@ namespace WXProjectWeb.Controllers
 
                     var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
 
-                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName+".jpg", bg);
+                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", bg);
 
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
                     {
