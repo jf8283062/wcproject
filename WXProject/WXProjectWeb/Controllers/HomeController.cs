@@ -71,6 +71,7 @@ namespace WXProjectWeb.Controllers
                         fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                         fromUser.count = 0;
                         UserBLL.SaveUsers(fromUser);
+
                         if (!string.IsNullOrWhiteSpace(model.EventKey))
                         {
                             model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_") + 1);
@@ -78,6 +79,13 @@ namespace WXProjectWeb.Controllers
                             user.count = user.count + 1;
                             var countx = UserBLL.UpdateUser(user);
                             log = log + "影响行数" + countx;
+
+                            string firstvalue = "你有1位新朋友支持你啦!";
+                            string keyword1value = fromUser.nickname;
+                            string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
+                            var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                            string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
                         }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
@@ -253,7 +261,16 @@ namespace WXProjectWeb.Controllers
 
             string token = CommonBLL.GetAccess_token();
 
-           string content= CommonBLL.SendTemplateMsg(openid);
+            UserInfo model = UserBLL.GetUserDetail(token, openid);
+
+            string firstvalue = "你有1位新朋友支持你啦!";
+            string keyword1value = model.nickname;
+            string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string remarkvalue = "你还差3位小伙伴的支持可获得活动奖励";
+            var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+
+            string content = CommonBLL.SendTemplateMsg(openid,data);
+
 
             return Content(token);
 

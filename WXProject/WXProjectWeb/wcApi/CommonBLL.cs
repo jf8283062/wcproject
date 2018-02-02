@@ -137,6 +137,27 @@ namespace WXProjectWeb.wcApi
         /// </summary>
         /// <param name="openId"></param>
         /// <returns></returns>
+        public static string SendTemplateMsg(string openId, object data)
+        {
+            string accesstoken = GetAccess_token();
+            string template_id = Template_id;
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}", accesstoken);
+
+            var postData = new { touser = openId, template_id = template_id, url = "", data = data };
+
+            var json = JsonConvert.SerializeObject(postData);
+
+            string content = CommonBLL.GetInfomation(url, json);
+
+            return content;
+        }
+
+        /// <summary>
+        /// 给指定用户发送模板消息  
+        /// 使用成员加入提醒模板
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
         public static string SendTemplateMsg(string openId)
         {
             string accesstoken = GetAccess_token();
