@@ -152,7 +152,7 @@ namespace WXProjectWeb.wcApi
             }
             if (!string.IsNullOrEmpty(MediaId))
             {
-                sb.Append("<MediaId><![CDATA[" + MediaId + "]]></MediaId>");
+                sb.Append("<Image><MediaId><![CDATA[" + MediaId + "]]></MediaId></Image>");
             }
             
             sb.Append("</xml>");
