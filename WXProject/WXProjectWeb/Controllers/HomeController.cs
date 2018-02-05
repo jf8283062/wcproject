@@ -77,15 +77,15 @@ namespace WXProjectWeb.Controllers
                             model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_") + 1);
                             var user = UserBLL.GetUserInfo(model.EventKey);
                             user.count = user.count + 1;
-                            var countx = UserBLL.UpdateUser(user);
-                            log = log + "影响行数" + countx;
+                            UserBLL.UpdateUser(user);
+                            log = log + "影响行数" ;
 
-                            string firstvalue = "你有1位新朋友支持你啦!";
-                            string keyword1value = fromUser.nickname;
-                            string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                            string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
-                            var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
-                            string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                            //string firstvalue = "你有1位新朋友支持你啦!";
+                            //string keyword1value = fromUser.nickname;
+                            //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            //string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
+                            //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                            //string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
                         }
                     }
                     resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
@@ -127,12 +127,6 @@ namespace WXProjectWeb.Controllers
                 }
 
             }
-            else
-            {
-                return Content("");
-            }
-
-
 
 
             //var touXiangPath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "touxiang.jpg";
@@ -163,18 +157,18 @@ namespace WXProjectWeb.Controllers
 
 
 
-            //#region 微信验证URL
-            //// 微信加密签名
-            //string signature = Request["SIGNATURE"];
-            //// 时间戮
-            //string timestamp = Request["TIMESTAMP"];
-            //// 随机数
-            //string nonce = Request["NONCE"];
-            //// 随机字符串
-            //string echostr = Request["echostr"];
-            //var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
-            //return Content("123");
-            //#endregion
+            #region 微信验证URL
+            // 微信加密签名
+            string signature = Request["SIGNATURE"];
+            // 时间戮
+            string timestamp = Request["TIMESTAMP"];
+            // 随机数
+            string nonce = Request["NONCE"];
+            // 随机字符串
+            string echostr = Request["echostr"];
+            var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
+            return Content("123");
+            #endregion
 
         }
 
