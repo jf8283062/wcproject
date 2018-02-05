@@ -42,92 +42,114 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            string _token = "";
-            if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
+
+
+            #region 微信验证URL
+            // 微信加密签名
+            string signature = Request["SIGNATURE"];
+            // 时间戮
+            string timestamp = Request["TIMESTAMP"];
+            // 随机数
+            string nonce = Request["NONCE"];
+            // 随机字符串
+            string echostr = Request["echostr"];
+            if (!string.IsNullOrWhiteSpace(signature)&& !string.IsNullOrWhiteSpace(timestamp) && !string.IsNullOrWhiteSpace(nonce) && !string.IsNullOrWhiteSpace(echostr))
             {
-                var token = CommonBLL.GetAccess_token();
-                Access_token = new Dictionary<string, DateTime>() {
-                    { token, DateTime.Now.AddSeconds(7000) }
-                    };
+                var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
+                return Content(re);
             }
             else
             {
-                _token = Access_token.FirstOrDefault().Key;
-            }
-            StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
-            string text = sr.ReadToEnd();
-            if (!string.IsNullOrEmpty(text))
-            {
-                string resStr = "";
-                var eventmodel = WXMethdBLL.CreateMessage(text);
-                if (eventmodel != null && eventmodel is SubscribeEvent)
+
+                string _token = "";
+                if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
                 {
-                    SubscribeEvent model = eventmodel as SubscribeEvent;
-                    var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
-                    string log = "";
-                    if (fromUser == null)
-                    {
-
-                        fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
-                        fromUser.count = 0;
-                        UserBLL.SaveUsers(fromUser);
-
-                        if (!string.IsNullOrWhiteSpace(model.EventKey))
-                        {
-                            model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_") + 1);
-                            var user = UserBLL.GetUserInfo(model.EventKey);
-                            user.count = user.count + 1;
-                            UserBLL.UpdateUser(user);
-                            log = log + "影响行数" ;
-
-                            //string firstvalue = "你有1位新朋友支持你啦!";
-                            //string keyword1value = fromUser.nickname;
-                            //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                            //string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
-                            //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
-                            //string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
-                        }
-                    }
-                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
-                    {
-                        FromUserName = model.ToUserName,
-                        ToUserName = model.FromUserName,
-                        Content = "感谢关注！回复任意消息可以获得定制二维码！" + model.EventKey + "    " + log
-                    });
-                    return Content(resStr);
+                    var token = CommonBLL.GetAccess_token();
+                    Access_token = new Dictionary<string, DateTime>() {
+                    { token, DateTime.Now.AddSeconds(7000) }
+                    };
                 }
                 else
                 {
-
-                    EventBase model = eventmodel as EventBase;
-
-                    var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
-                    var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
-                    var user = UserBLL.GetUserInfo(model.FromUserName);
-                    if (user == null)
+                    _token = Access_token.FirstOrDefault().Key;
+                }
+                StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
+                string text = sr.ReadToEnd();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    string resStr = "";
+                    var eventmodel = WXMethdBLL.CreateMessage(text);
+                    if (eventmodel != null && eventmodel is SubscribeEvent)
                     {
-                        user = UserBLL.GetUserDetail(_token, model.FromUserName);
-                        UserBLL.AddUser(user);
+                        SubscribeEvent model = eventmodel as SubscribeEvent;
+                        var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
+                        string log = "";
+                        if (fromUser == null)
+                        {
+
+                            fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
+                            fromUser.count = 0;
+                            UserBLL.SaveUsers(fromUser);
+
+                            if (!string.IsNullOrWhiteSpace(model.EventKey))
+                            {
+                                model.EventKey = model.EventKey.Substring(model.EventKey.IndexOf("_") + 1);
+                                var user = UserBLL.GetUserInfo(model.EventKey);
+                                user.count = user.count + 1;
+                                UserBLL.UpdateUser(user);
+                                log = log + "影响行数";
+
+                                //string firstvalue = "你有1位新朋友支持你啦!";
+                                //string keyword1value = fromUser.nickname;
+                                //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                //string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
+                                //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                                //string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                            }
+                        }
+                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                        {
+                            FromUserName = model.ToUserName,
+                            ToUserName = model.FromUserName,
+                            Content = "感谢关注！回复任意消息可以获得定制二维码！" + model.EventKey + "    " + log
+                        });
+                        return Content(resStr);
+                    }
+                    else
+                    {
+
+                        EventBase model = eventmodel as EventBase;
+
+                        var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
+                        var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
+                        var user = UserBLL.GetUserInfo(model.FromUserName);
+                        if (user == null)
+                        {
+                            user = UserBLL.GetUserDetail(_token, model.FromUserName);
+                            UserBLL.AddUser(user);
+                        }
+
+                        var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
+
+                        var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
+
+                        var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", bg);
+
+                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
+                        {
+                            FromUserName = model.ToUserName,
+                            ToUserName = model.FromUserName,
+                            MediaId = x
+                        });
+                        return Content(resStr);
+
                     }
 
-                    var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
-
-                    var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
-
-                    var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", bg);
-
-                    resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
-                    {
-                        FromUserName = model.ToUserName,
-                        ToUserName = model.FromUserName,
-                        MediaId = x
-                    });
-                    return Content(resStr);
-
                 }
-
+                return Content("");
             }
-
+            #endregion
+           
 
             //var touXiangPath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "touxiang.jpg";
             //FileStream fsTouXiang = new FileStream(touXiangPath, FileMode.Open);
@@ -156,19 +178,6 @@ namespace WXProjectWeb.Controllers
 
 
 
-
-            #region 微信验证URL
-            // 微信加密签名
-            string signature = Request["SIGNATURE"];
-            // 时间戮
-            string timestamp = Request["TIMESTAMP"];
-            // 随机数
-            string nonce = Request["NONCE"];
-            // 随机字符串
-            string echostr = Request["echostr"];
-            var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
-            return Content("123");
-            #endregion
 
         }
 

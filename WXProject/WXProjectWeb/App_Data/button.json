@@ -1,22 +1,22 @@
 ﻿{
     "button": [
         {
-            "name": "获取分享图片",
+            "name": "分享图片",
             "type": "click",
             "key": "GETPICTUER"
         },
         {
-            "name": "",
+            "name": "文章",
             "sub_button": [
                 {
                     "type": "view",
                     "name": "最新文章",
-                    "url": "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI4MjY1ODcxMw==&scene=123#wechat_redirect"
+                    "url": "/home/ss"
                 },
                 {
                     "type": "view",
                     "name": "课堂笔记",
-                    "url": "https://mp.weixin.qq.com/mp/homepage?__biz=MzI4MjY1ODcxMw==&hid=1&sn=16c702fd8f543ef9a8cc5fcef16f482f&scene=1&devicetype=Windows+10&version=6206014b&lang=zh_CN&nettype=WIFI&ascene=1&session_us=gh_7d5c3dd42653&fontScale=100&wx_header=1&winzoom=1"
+                    "url": "/home/ss1"
                 }               
             ]
         }
