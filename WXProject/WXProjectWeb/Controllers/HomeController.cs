@@ -53,11 +53,12 @@ namespace WXProjectWeb.Controllers
             string nonce = Request["NONCE"];
             // 随机字符串
             string echostr = Request["echostr"];
-            if (!string.IsNullOrWhiteSpace(signature)&& !string.IsNullOrWhiteSpace(timestamp) && !string.IsNullOrWhiteSpace(nonce) && !string.IsNullOrWhiteSpace(echostr))
+            if (!string.IsNullOrWhiteSpace(signature) && !string.IsNullOrWhiteSpace(timestamp) && !string.IsNullOrWhiteSpace(nonce) && !string.IsNullOrWhiteSpace(echostr))
             {
                 var re = WXMethdBLL.CheckURL(signature, timestamp, nonce, echostr);
                 return Content(re);
             }
+            #endregion
             else
             {
 
@@ -75,18 +76,24 @@ namespace WXProjectWeb.Controllers
                 }
                 StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
                 string text = sr.ReadToEnd();
+
                 if (!string.IsNullOrEmpty(text))
                 {
                     string resStr = "";
+
                     var eventmodel = WXMethdBLL.CreateMessage(text);
-                    if (eventmodel != null && eventmodel is SubscribeEvent)
+                    if (eventmodel==null)
+                    {
+                        return Content("");
+                    }
+                    //关注事件
+                    if (eventmodel is SubscribeEvent)
                     {
                         SubscribeEvent model = eventmodel as SubscribeEvent;
                         var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
-                        string log = "";
                         if (fromUser == null)
                         {
-
+                            #region 第一次关注
                             fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                             fromUser.count = 0;
                             UserBLL.SaveUsers(fromUser);
@@ -97,28 +104,40 @@ namespace WXProjectWeb.Controllers
                                 var user = UserBLL.GetUserInfo(model.EventKey);
                                 user.count = user.count + 1;
                                 UserBLL.UpdateUser(user);
-                                log = log + "影响行数";
-
-                                //string firstvalue = "你有1位新朋友支持你啦!";
-                                //string keyword1value = fromUser.nickname;
-                                //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                //string remarkvalue = "你还差"+(5-user.count).ToString()+"位小伙伴的支持可获得活动奖励";
-                                //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
-                                //string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                                if (user.count < 5)
+                                {
+                                    string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
+                                    string keyword1value = fromUser.nickname;
+                                    string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    string remarkvalue = "还需要" + (5 - user.count).ToString() + "位小伙伴扫码关注，就可以解锁领取【112份著名绘本及配套教案】";
+                                    var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                                    string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                                }
+                                else
+                                {
+                                    string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
+                                    string keyword1value = fromUser.nickname;
+                                    string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    string remarkvalue = "已经有" + user.count + "位小伙伴扫码关注，请联系管理员索要电子资料";
+                                    var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                                    string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                                }
                             }
+                            #endregion
                         }
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                         {
                             FromUserName = model.ToUserName,
                             ToUserName = model.FromUserName,
-                            Content = "感谢关注！回复任意消息可以获得定制二维码！" + model.EventKey + "    " + log
+                            Content = "感谢关注！！"
                         });
                         return Content(resStr);
                     }
-                    else
+                    //点击事件生成返回二维码
+                    else if (eventmodel is Modal.WeiXinEvent.ClickEvent)
                     {
 
-                        EventBase model = eventmodel as EventBase;
+                        Modal.WeiXinEvent.ClickEvent model = eventmodel as Modal.WeiXinEvent.ClickEvent;
 
                         var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
                         var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
@@ -144,41 +163,25 @@ namespace WXProjectWeb.Controllers
                         return Content(resStr);
 
                     }
+                    //接受消息
+                    else if (eventmodel is Modal.WeiXinEvent.TextMessage)
+                    {
+                        Modal.WeiXinEvent.TextMessage model = eventmodel as Modal.WeiXinEvent.TextMessage;
+
+
+
+                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                        {
+                            FromUserName = model.ToUserName,
+                            ToUserName = model.FromUserName,
+                            Content = ""
+                        });
+                        return Content(resStr);
+                    }
 
                 }
                 return Content("");
             }
-            #endregion
-           
-
-            //var touXiangPath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "touxiang.jpg";
-            //FileStream fsTouXiang = new FileStream(touXiangPath, FileMode.Open);
-            //byte[] dataTouXiang = new byte[fsTouXiang.Length];
-            //fsTouXiang.Read(dataTouXiang, 0, dataTouXiang.Length);
-            //fsTouXiang.Close();
-            //fsTouXiang.Dispose();
-            //MemoryStream mstouxiang = new MemoryStream(dataTouXiang);
-            //var erweima = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + "erweima.jpg";
-            //FileStream fserweima = new FileStream(erweima, FileMode.Open);
-            //byte[] dataerweima = new byte[fserweima.Length];
-            //fserweima.Read(dataerweima, 0, dataerweima.Length);
-            //fserweima.Close();
-            //fserweima.Dispose();
-            //MemoryStream mserweima = new MemoryStream(dataerweima);
-
-
-
-            //var outsteam = ImgCom.ImgCommon.AddWaterPic(ms, mstouxiang, mserweima, "张辉", "测试内容就是这样");
-
-
-            //return File(outsteam, "image/jpeg");
-
-
-
-
-
-
-
         }
 
 
@@ -272,7 +275,7 @@ namespace WXProjectWeb.Controllers
             string remarkvalue = "你还差3位小伙伴的支持可获得活动奖励";
             var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
 
-            string content = CommonBLL.SendTemplateMsg(openid,data);
+            string content = CommonBLL.SendTemplateMsg(openid, data);
 
 
             return Content(token);

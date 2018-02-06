@@ -38,7 +38,7 @@ namespace WXProjectWeb.wcApi
         /// 将XML 转入事件列表
         /// </summary>
         /// <param name="xml"></param>
-        public static EventBase CreateMessage(string xml)
+        public static BaseMsg CreateMessage(string xml)
         {
             if (_queue == null)
             {
@@ -53,48 +53,42 @@ namespace WXProjectWeb.wcApi
             var FromUserName = xdoc.Element("FromUserName").Value;
             var CreateTime = xdoc.Element("CreateTime").Value;
             MsgType type = (MsgType)Enum.Parse(typeof(MsgType), msgtype);
-            //type == MsgType.EVENT
-            if (true)
+
+            switch (type)
             {
-                switch (type)
-                {
-                    //case MsgType.TEXT: return CommonBLL.ConvertObj<TextMessage>(xml);
-                    //case MsgType.IMAGE: return CommonBLL.ConvertObj<ImgMessage>(xml);
-                    //case MsgType.VIDEO: return CommonBLL.ConvertObj<VideoMessage>(xml);
-                    //case MsgType.VOICE: return CommonBLL.ConvertObj<VoiceMessage>(xml);
-                    //case MsgType.LINK:
-                    //    return CommonBLL.ConvertObj<LinkMessage>(xml);
-                    //case MsgType.LOCATION:
-                    //    return CommonBLL.ConvertObj<LocationMessage>(xml);
-                    case MsgType.EVENT://事件类型
+                case MsgType.TEXT: return CommonBLL.ConvertObj<TextMessage>(xml);
+                //case MsgType.IMAGE: return CommonBLL.ConvertObj<ImgMessage>(xml);
+                //case MsgType.VIDEO: return CommonBLL.ConvertObj<VideoMessage>(xml);
+                //case MsgType.VOICE: return CommonBLL.ConvertObj<VoiceMessage>(xml);
+                //case MsgType.LINK:
+                //    return CommonBLL.ConvertObj<LinkMessage>(xml);
+                //case MsgType.LOCATION:
+                //    return CommonBLL.ConvertObj<LocationMessage>(xml);
+                case MsgType.EVENT://事件类型
+                    {
+                        var eventtype = (EventEnum)Enum.Parse(typeof(EventEnum), xdoc.Element("Event").Value.ToUpper());
+                        switch (eventtype)
                         {
-                            var eventtype = (EventEnum)Enum.Parse(typeof(EventEnum), xdoc.Element("Event").Value.ToUpper());
-                            switch (eventtype)
-                            {
-                                //case Event.CLICK:
-                                //    return CommonBLL.ConvertObj<NormalMenuEventMessage>(xml);
-                                //case Event.VIEW: return CommonBLL.ConvertObj<NormalMenuEventMessage>(xml);
-                                //case Event.LOCATION: return CommonBLL.ConvertObj<LocationEventMessage>(xml);
-                                //case Event.LOCATION_SELECT: return CommonBLL.ConvertObj<LocationMenuEventMessage>(xml);
-                                //扫描二维码
-                                //case EventEnum.SCAN: return CommonBLL.ConvertObj<ScanEventMessage>(xml);
-                                //关注公众号，或者扫描二维码关注
-                                case EventEnum.SUBSCRIBE: return CommonBLL.ConvertObj<SubscribeEvent>(xml);
-                                //取消关注
-                                case EventEnum.UNSUBSCRIBE: return CommonBLL.ConvertObj<UnsubscribeEvent>(xml);
-                                //case Event.SCANCODE_WAITMSG: return CommonBLL.ConvertObj<ScanMenuEventMessage>(xml);
-                                default:
-                                    return CommonBLL.ConvertObj<EventBase>(xml);
-                            }
+                            case EventEnum.CLICK:
+                                return CommonBLL.ConvertObj<ClickEvent>(xml);
+                            //case Event.VIEW: return CommonBLL.ConvertObj<NormalMenuEventMessage>(xml);
+                            //case Event.LOCATION: return CommonBLL.ConvertObj<LocationEventMessage>(xml);
+                            //case Event.LOCATION_SELECT: return CommonBLL.ConvertObj<LocationMenuEventMessage>(xml);
+                            //扫描二维码
+                            //case EventEnum.SCAN: return CommonBLL.ConvertObj<ScanEventMessage>(xml);
+                            //关注公众号，或者扫描二维码关注
+                            case EventEnum.SUBSCRIBE: return CommonBLL.ConvertObj<SubscribeEvent>(xml);
+                            //取消关注
+                            case EventEnum.UNSUBSCRIBE: return CommonBLL.ConvertObj<UnsubscribeEvent>(xml);
+                            //case Event.SCANCODE_WAITMSG: return CommonBLL.ConvertObj<ScanMenuEventMessage>(xml);
+                            default:
+                                return CommonBLL.ConvertObj<EventBase>(xml);
                         }
-                    default:
-                        return CommonBLL.ConvertObj<EventBase>(xml);
-                }
+                    }
+                default:
+                    return null;
             }
-            else
-            {
-                return null;
-            }
+
 
         }
 
@@ -136,10 +130,10 @@ namespace WXProjectWeb.wcApi
 
             StringBuilder sb = new StringBuilder();
 
-//            @"<xml><ToUserName><![CDATA[gh_46aebec19e92]]></ToUserName>
-//<FromUserName><![CDATA[oVWwA0x8AB3fkTdokUxBflTkVIZk]]></FromUserName>
-//<CreateTime>1517205478</CreateTime>
-//<MsgType><![CDATA[text]]></MsgType> <Content><![CDATA[你好！！]]></Content></xml>"
+            //            @"<xml><ToUserName><![CDATA[gh_46aebec19e92]]></ToUserName>
+            //<FromUserName><![CDATA[oVWwA0x8AB3fkTdokUxBflTkVIZk]]></FromUserName>
+            //<CreateTime>1517205478</CreateTime>
+            //<MsgType><![CDATA[text]]></MsgType> <Content><![CDATA[你好！！]]></Content></xml>"
 
             sb.Append("<xml>");
             sb.Append("<ToUserName><![CDATA[" + toUserName + "]]></ToUserName>");
@@ -154,7 +148,7 @@ namespace WXProjectWeb.wcApi
             {
                 sb.Append("<Image><MediaId><![CDATA[" + MediaId + "]]></MediaId></Image>");
             }
-            
+
             sb.Append("</xml>");
 
             return sb.ToString();

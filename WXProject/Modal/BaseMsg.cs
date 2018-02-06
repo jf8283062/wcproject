@@ -12,13 +12,17 @@ namespace Modal
     public class BaseMsg
     {
         /// <summary>
-        /// 发送者标识
+        /// 消息类型，event
         /// </summary>
-        public string FromUser { get; set; }
+        public string MsgType { get; set; }
         /// <summary>
-        /// 消息表示。普通消息时，为msgid，事件消息时，为事件的创建时间
+        /// 开发者微信号
         /// </summary>
-        public string MsgFlag { get; set; }
+        public string ToUserName { get; set; }
+        /// <summary>
+        /// 发送方帐号（一个OpenID）
+        /// </summary>
+        public string FromUserName { get; set; }
         /// <summary>
         /// 添加到队列的时间
         /// </summary>
