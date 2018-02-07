@@ -26,6 +26,6 @@ namespace Modal
         /// <summary>
         /// 添加到队列的时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public string CreateTime { get; set; }
     }
 }
