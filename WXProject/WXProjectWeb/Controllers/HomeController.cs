@@ -167,14 +167,24 @@ namespace WXProjectWeb.Controllers
                     else if (eventmodel is Modal.WeiXinEvent.TextMessage)
                     {
                         Modal.WeiXinEvent.TextMessage model = eventmodel as Modal.WeiXinEvent.TextMessage;
-
-
-
+                        string content = "";
+                        if (CommonBLL.dic.ContainsKey(model.Content))
+                        {
+                            content = CommonBLL.dic[model.Content];
+                        }
+                        if (model.Content.Contains("谢"))
+                        {
+                            content = "辛苦了 不客气，亲。";
+                        }
+                        if (model.Content.Contains("合作")|| model.Content.Contains("广告")|| model.Content.Contains("投放"))
+                        {
+                            content = "合作请加微信号：xiaochaokefu";
+                        }
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                         {
                             FromUserName = model.ToUserName,
                             ToUserName = model.FromUserName,
-                            Content = ""
+                            Content = content
                         });
                         return Content(resStr);
                     }
@@ -192,98 +202,9 @@ namespace WXProjectWeb.Controllers
         public ActionResult Test()
         {
 
-            Dictionary<string, string> dic = new Dictionary<string, string>() {
-               { "B103",@"后续我们会提供更多实用的资料。 
 
-人教版1-6年级语文上册期末测试卷+答案 ⑩
-链接：https://pan.baidu.com/s/1qZzwX4o 
-密码：abv5
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               {"A104",    @"后续我们会提供更多实用的资料。 
-
-人教版1-6年级数学上册期末测试卷+答案⑩
-链接：https://pan.baidu.com/s/1dlCvIu
-密码：56zy
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               {
-"B105",    @"后续我们会提供更多实用的资料。 
-
-外研版3-6年级英语上册期末测试卷+答案①
-链接：https://pan.baidu.com/s/1kWG2hIB 
-密码：vtre
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               { "A106",@"后续我们会提供更多实用的资料。 
-
-最全小学语文多音字汇总
-链接：https://pan.baidu.com/s/1mjx36Da 
-密码：v4qk
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B107",    @"后续我们会提供更多实用的资料。 
-
-小学生写人作文四大技巧+1-6年级范文
-链接：https://pan.baidu.com/s/1pNt9Syn 
-密码：11v5
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "A108",    @"后续我们会提供更多实用的资料。 
-
-全套故事情节梗概＋必考文学常识＋小初高重点考题任意两份】礼包！
-链接：https://pan.baidu.com/s/1i7nat3R 
-密码：y7hs
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B109",    @"后续我们会提供更多实用的资料。
-
-1-9年级语文必背古诗文135篇（含音频）+出自《论语》中的成语
-详解链接：http://pan.baidu.com/s/1boQmcSB 
-密码：gnld
- 
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               {"A110",    @"后续我们会提供更多实用的资料。
-
-小学1-6年级奥数寒假班完整教材
-链接: https://pan.baidu.com/s/1nwJgG1z 
-密码: ewxn
-
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B111",    @"后续我们会提供更多实用的资料。
-
-海尼曼分级阅读【全套绘本PDF+配套音频+打印版】
-链接：https://pan.baidu.com/s/1snsk7Y9 
-密码：s8dp
-
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               {"谢谢, 感谢, 谢了"," 辛苦了 不客气，亲。" },
-               {" 合作, 广告, 投放","  合作请加微信号：xiaochaokefu" }
-
-            };
-        /// hui_open id "oVWwA044l4_gH37FSmlyqvF04LX0"
-        /// feng_open_id "oVWwA0x8AB3fkTdokUxBflTkVIZk"
+            /// hui_open id "oVWwA044l4_gH37FSmlyqvF04LX0"
+            /// feng_open_id "oVWwA0x8AB3fkTdokUxBflTkVIZk"
             string openid = "oVWwA044l4_gH37FSmlyqvF04LX0";
 
 
