@@ -46,7 +46,7 @@ namespace WXProjectWeb.wcApi
             }
             else if (_queue.Count >= 50)
             {
-                _queue = _queue.Where(q => { return q.CreateTime.AddSeconds(20) > DateTime.Now; }).ToList();//保留20秒内未响应的消息
+                _queue = _queue.OrderByDescending(o=>o.CreateTime).ToList();//保留20秒内未响应的消息
             }
             XElement xdoc = XElement.Parse(xml);
             var msgtype = xdoc.Element("MsgType").Value.ToUpper();

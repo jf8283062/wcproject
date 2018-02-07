@@ -167,7 +167,7 @@ namespace WXProjectWeb.Controllers
                     else if (eventmodel is Modal.WeiXinEvent.TextMessage)
                     {
                         Modal.WeiXinEvent.TextMessage model = eventmodel as Modal.WeiXinEvent.TextMessage;
-                        string content = "";
+                        string content = "已经收到您的留言了，小编看了后会立马回复您的！";
                         if (CommonBLL.dic.ContainsKey(model.Content))
                         {
                             content = CommonBLL.dic[model.Content];
