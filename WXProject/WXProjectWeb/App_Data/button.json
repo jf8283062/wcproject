@@ -1,24 +1,29 @@
 ﻿{
-    "button": [
+  "button": [
+    {
+      "name": "领取资料",
+      "type": "click",
+      "key": "GETPICTUER"
+    },
+    {
+      "name": "小学干货",
+      "sub_button": [
         {
-            "name": "分享图片",
-            "type": "click",
-            "key": "GETPICTUER"
+          "type": "view",
+          "name": "语数外笔记",
+          "url": "http://mp.weixin.qq.com/mp/homepage?__biz=MzI4MjY1ODcxMw==&hid=1&sn=16c702fd8f543ef9a8cc5fcef16f482f&scene=18#wechat_redirect"
         },
         {
-            "name": "文章",
-            "sub_button": [
-                {
-                    "type": "view",
-                    "name": "最新文章",
-                    "url": "/home/ss"
-                },
-                {
-                    "type": "view",
-                    "name": "课堂笔记",
-                    "url": "/home/ss1"
-                }               
-            ]
+          "name": "大家正在读",
+          "type": "view",
+          "url": "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI4MjY1ODcxMw==#wechat_redirect"
+        },
+        {
+          "type": "view",
+          "name": "精选书单",
+          "url": "https://weidian.com/?userid=880432647"
         }
-    ]
+      ]
+    }
+  ]
 }

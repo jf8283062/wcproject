@@ -15,6 +15,7 @@ namespace WXProjectWeb.wcApi
 {
     public class CommonBLL
     {
+
         public readonly static string Token = System.Configuration.ConfigurationManager.AppSettings["Token"];
         public readonly static string AppID = System.Configuration.ConfigurationManager.AppSettings["AppID"];
         public readonly static string Secret = System.Configuration.ConfigurationManager.AppSettings["Secret"];
