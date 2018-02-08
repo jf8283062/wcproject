@@ -147,7 +147,7 @@ namespace WXProjectWeb.wcApi
         }
 
 
-
+        public static Dictionary<string, DateTime> Access_token = null;
         /// <summary>
         /// 
         /// </summary>
@@ -157,21 +157,36 @@ namespace WXProjectWeb.wcApi
         public static string GetAccess_token()
         {
             string access_token = ""; //获取的access_token;
-            string strUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppID + "&secret=" + Secret;
-
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(strUrl);
-            req.Method = "GET";
-
-            using (WebResponse wr = req.GetResponse())
+            
+            if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
             {
-                StreamReader reader = new StreamReader(wr.GetResponseStream(), Encoding.UTF8);
-                string content = reader.ReadToEnd();
-                reader.Close();
-                reader.Dispose();
-                //在这里对Access_token 赋值  
-                JObject job = (JObject)JsonConvert.DeserializeObject(content);
-                access_token = job["access_token"].ToString();
+
+                string strUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + AppID + "&secret=" + Secret;
+
+                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(strUrl);
+                req.Method = "GET";
+
+                using (WebResponse wr = req.GetResponse())
+                {
+                    StreamReader reader = new StreamReader(wr.GetResponseStream(), Encoding.UTF8);
+                    string content = reader.ReadToEnd();
+                    reader.Close();
+                    reader.Dispose();
+                    //在这里对Access_token 赋值  
+                    JObject job = (JObject)JsonConvert.DeserializeObject(content);
+                    access_token = job["access_token"].ToString();
+                }
+
+                Access_token = new Dictionary<string, DateTime>() {
+                    { access_token, DateTime.Now.AddHours(1) }
+                    };
             }
+            else
+            {
+                access_token = Access_token.FirstOrDefault().Key;
+            }
+
+
             return access_token;
         }
 
@@ -242,6 +257,29 @@ namespace WXProjectWeb.wcApi
             return content;
         }
 
+
+
+        /// <summary>
+        /// 给指定用户发送模板消息  
+        /// 使用成员加入提醒模板
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        public static string SendKeFuMsg(string openId, object data)
+        {
+            string accesstoken = GetAccess_token();
+
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={0}", accesstoken);
+
+            var postData = new { touser = openId, msgtype = "text", text = new { content = data } };
+
+            var json = JsonConvert.SerializeObject(postData);
+
+            string content = CommonBLL.GetInfomation(url, json);
+
+            return content;
+        }
+
         /// <summary>
         /// 给指定用户发送模板消息  
         /// 使用成员加入提醒模板
@@ -258,7 +296,7 @@ namespace WXProjectWeb.wcApi
             string keyword1value = "辉";
             string keyword2value = "2014年9月22日 10:10:10";
             string remarkvalue = "你还差3位小伙伴的支持可获得活动奖励";
-            var postData = new { touser = openId, template_id = template_id, url ="",data=new { first=new { value= firstvalue }, keyword1=new { value = keyword1value }, keyword2=new { value= keyword2value }, remark=new { value= remarkvalue } } };
+            var postData = new { touser = openId, template_id = template_id, url = "", data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } } };
 
             var json = JsonConvert.SerializeObject(postData);
 
@@ -291,7 +329,7 @@ namespace WXProjectWeb.wcApi
                     }
                     continue;
                 }
-                if (pr!=null&&pr.PropertyType!=null)
+                if (pr != null && pr.PropertyType != null)
                 {
                     if (pr.PropertyType.Name == "MsgType")//获取消息模型
                     {

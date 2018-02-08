@@ -19,7 +19,7 @@ namespace WXProjectWeb.Controllers
     {
         public static MemoryStream ms = null;
 
-        public static Dictionary<string, DateTime> Access_token = null;
+
 
 
         public HomeController()
@@ -62,18 +62,7 @@ namespace WXProjectWeb.Controllers
             else
             {
 
-                string _token = "";
-                if (Access_token == null || Access_token.FirstOrDefault().Value < DateTime.Now)
-                {
-                    var token = CommonBLL.GetAccess_token();
-                    Access_token = new Dictionary<string, DateTime>() {
-                    { token, DateTime.Now.AddSeconds(7000) }
-                    };
-                }
-                else
-                {
-                    _token = Access_token.FirstOrDefault().Key;
-                }
+                string _token = CommonBLL.GetAccess_token();
                 StreamReader sr = new StreamReader(Request.InputStream, Encoding.UTF8);
                 string text = sr.ReadToEnd();
 
@@ -118,19 +107,24 @@ namespace WXProjectWeb.Controllers
                                     string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
                                     string keyword1value = fromUser.nickname;
                                     string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                    string remarkvalue = "已经有" + user.count + "位小伙伴扫码关注，请联系管理员索要电子资料";
+                                    string remarkvalue = "已经有" + user.count + @"
+你是一位重视教育的好家长，
+孩子一定会越来越棒！
+幼升小英语启蒙课
+链接: https://pan.baidu.com/s/1o9e36l0 
+密码: i4ps
+
+后续我们还会提供更多实用的免费资料。
+
+提醒：
+1、请尽快转存到自己的网盘，如失效请加学习助手微信liruijuan628；
+2、建议转发完整地址到电脑上操作,手打地址容易出错。";
                                     var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
                                     string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
                                 }
                             }
                             #endregion
-                        }
-                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
-                        {
-                            FromUserName = model.ToUserName,
-                            ToUserName = model.FromUserName,
-                            Content = "感谢关注！！"
-                        });
+                        }                      
                         return Content(resStr);
                     }
                     //点击事件生成返回二维码
@@ -148,11 +142,20 @@ namespace WXProjectWeb.Controllers
                             UserBLL.AddUser(user);
                         }
 
+                        string content = CommonBLL.SendKeFuMsg(model.FromUserName, @"欢迎来到小学生微学习。
+下图是您的专属任务海报
+把海报分享给家长朋友
+获5人扫码即可领取【幼升小英语启蒙课】
+我们郑重承诺：本活动真实有效。");
+
+
                         var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
 
-                        var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream);
+                        var bg = ImgCom.ImgCommon.AddWaterPic(ms, touxiangStream, QrStream, null, "我领取了");
 
                         var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", bg);
+
+
 
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
                         {
@@ -160,6 +163,7 @@ namespace WXProjectWeb.Controllers
                             ToUserName = model.FromUserName,
                             MediaId = x
                         });
+
                         return Content(resStr);
 
                     }
@@ -176,7 +180,7 @@ namespace WXProjectWeb.Controllers
                         {
                             content = "辛苦了 不客气，亲。";
                         }
-                        if (model.Content.Contains("合作")|| model.Content.Contains("广告")|| model.Content.Contains("投放"))
+                        if (model.Content.Contains("合作") || model.Content.Contains("广告") || model.Content.Contains("投放"))
                         {
                             content = "合作请加微信号：xiaochaokefu";
                         }
