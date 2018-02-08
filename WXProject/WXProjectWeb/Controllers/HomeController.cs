@@ -95,19 +95,20 @@ namespace WXProjectWeb.Controllers
                                 UserBLL.UpdateUser(user);
                                 if (user.count < 5)
                                 {
-                                    string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
-                                    string keyword1value = fromUser.nickname;
-                                    string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                    string remarkvalue = "还需要" + (5 - user.count).ToString() + "位小伙伴扫码关注，就可以解锁领取【112份著名绘本及配套教案】";
-                                    var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
-                                    string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                                    //string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
+                                    //string keyword1value = fromUser.nickname;
+                                    //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                    string remarkvalue = @"启禀少主！您有1位新朋友支持你啦!
+                                        还需要" + (5 - user.count).ToString() + @"位小伙伴扫码关注
+                                        就可以解锁领取【112份著名绘本及配套教案】";
+
+                                    //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                                    string content = CommonBLL.SendKeFuMsg(model.EventKey, remarkvalue);
                                 }
                                 else
                                 {
-                                    string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
-                                    string keyword1value = fromUser.nickname;
-                                    string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                    string remarkvalue = "已经有" + user.count + @"
+                                    string remarkvalue = @"启禀少主！您有1位新朋友支持你啦! 
+已经有" + user.count + @"
 你是一位重视教育的好家长，
 孩子一定会越来越棒！
 幼升小英语启蒙课
@@ -119,8 +120,8 @@ namespace WXProjectWeb.Controllers
 提醒：
 1、请尽快转存到自己的网盘，如失效请加学习助手微信liruijuan628；
 2、建议转发完整地址到电脑上操作,手打地址容易出错。";
-                                    var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
-                                    string content = CommonBLL.SendTemplateMsg(model.EventKey, data);
+                                    //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
+                                    string content = CommonBLL.SendKeFuMsg(model.EventKey, remarkvalue);
                                 }
                             }
                             #endregion
@@ -132,11 +133,21 @@ namespace WXProjectWeb.Controllers
                     {
 
                         Modal.WeiXinEvent.ClickEvent model = eventmodel as Modal.WeiXinEvent.ClickEvent;
+                        var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
+                        if (fromUser == null)
+                        {
+                            #region 第一次关注
+                            fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
+                            fromUser.count = 0;
+                            UserBLL.SaveUsers(fromUser);
+                        }
+                            string content = CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname+  @"
+欢迎来到小学生微学习。
+正在为您生成专属任务海报。
 
-                        string content = CommonBLL.SendKeFuMsg(model.FromUserName, @"欢迎来到小学生微学习。
-下图是您的专属任务海报
-把海报分享给家长朋友
-获5人扫码即可领取【幼升小英语启蒙课】
+把海报分享给家长朋友，
+获5人扫码即可免费领取价值千元的【幼升小英语启蒙课】
+
 我们郑重承诺：本活动真实有效。");
 
                         var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
