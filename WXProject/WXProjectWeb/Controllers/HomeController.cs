@@ -133,6 +133,12 @@ namespace WXProjectWeb.Controllers
 
                         Modal.WeiXinEvent.ClickEvent model = eventmodel as Modal.WeiXinEvent.ClickEvent;
 
+                        string content = CommonBLL.SendKeFuMsg(model.FromUserName, @"欢迎来到小学生微学习。
+下图是您的专属任务海报
+把海报分享给家长朋友
+获5人扫码即可领取【幼升小英语启蒙课】
+我们郑重承诺：本活动真实有效。");
+
                         var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName);
                         var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                         var user = UserBLL.GetUserInfo(model.FromUserName);
@@ -142,11 +148,7 @@ namespace WXProjectWeb.Controllers
                             UserBLL.AddUser(user);
                         }
 
-                        string content = CommonBLL.SendKeFuMsg(model.FromUserName, @"欢迎来到小学生微学习。
-下图是您的专属任务海报
-把海报分享给家长朋友
-获5人扫码即可领取【幼升小英语启蒙课】
-我们郑重承诺：本活动真实有效。");
+                       
 
 
                         var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
