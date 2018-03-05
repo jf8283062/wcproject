@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseMsg.cs" />
+    <Compile Include="ShareCount.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="WeiXinEvent\ClickEvent.cs" />
     <Compile Include="WeiXinEvent\EventEnum.cs" />
