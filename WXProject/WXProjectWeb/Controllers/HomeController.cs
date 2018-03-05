@@ -98,22 +98,25 @@ namespace WXProjectWeb.Controllers
                                     //string firstvalue = "启禀少主！您有1位新朋友支持你啦!";
                                     //string keyword1value = fromUser.nickname;
                                     //string keyword2value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                                    string remarkvalue = @"启禀少主！您有1位新朋友支持你啦!
-                                        还需要" + (5 - user.count).ToString() + @"位小伙伴扫码关注
-                                        就可以解锁领取【112份著名绘本及配套教案】";
+                                    string remarkvalue = @"恭喜：
+您的好友" + fromUser.nickname + @"来支持你啦!
+亲,还需" + (5 - user.count) + @"位小伙伴扫码支持
+就可以免费领取价值千元的：
+【幼升小英语启蒙课：学字母记单词】";
 
                                     //var data = new { first = new { value = firstvalue }, keyword1 = new { value = keyword1value }, keyword2 = new { value = keyword2value }, remark = new { value = remarkvalue } };
                                     string content = CommonBLL.SendKeFuMsg(model.EventKey, remarkvalue);
                                 }
-                                else
+                                else if (user.count == 5)
                                 {
-                                    string remarkvalue = @"启禀少主！您有1位新朋友支持你啦! 
-已经有" + user.count + @"
+                                    string remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
 你是一位重视教育的好家长，
 孩子一定会越来越棒！
+
 幼升小英语启蒙课
 链接: https://pan.baidu.com/s/1o9e36l0 
 密码: i4ps
+
 
 后续我们还会提供更多实用的免费资料。
 
@@ -125,8 +128,21 @@ namespace WXProjectWeb.Controllers
                                 }
                             }
                             #endregion
-                        }                      
+                        }
+                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                        {
+                            FromUserName = model.ToUserName,
+                            ToUserName = model.FromUserName,
+                            Content = @"欢迎你，家长朋友。
+我们是一帮小学教育工作者，
+工作之余，
+在这里分享教育心得。
+
+如需要领取免费资料，
+请点击底部的菜单。"
+                        });
                         return Content(resStr);
+
                     }
                     //点击事件生成返回二维码
                     else if (eventmodel is Modal.WeiXinEvent.ClickEvent)
@@ -136,12 +152,12 @@ namespace WXProjectWeb.Controllers
                         var fromUser = UserBLL.GetUserInfo(eventmodel.FromUserName);
                         if (fromUser == null)
                         {
-                            #region 第一次关注
+
                             fromUser = UserBLL.GetUserDetail(_token, eventmodel.FromUserName);
                             fromUser.count = 0;
                             UserBLL.SaveUsers(fromUser);
                         }
-                            string content = CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname+  @"
+                        string content = CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
 欢迎来到小学生微学习。
 正在为您生成专属任务海报。
 
@@ -159,7 +175,7 @@ namespace WXProjectWeb.Controllers
                             UserBLL.AddUser(user);
                         }
 
-                       
+
 
 
                         var touxiangStream = UserBLL.GetTouxiang(user.headimgurl);
@@ -184,7 +200,7 @@ namespace WXProjectWeb.Controllers
                     else if (eventmodel is Modal.WeiXinEvent.TextMessage)
                     {
                         Modal.WeiXinEvent.TextMessage model = eventmodel as Modal.WeiXinEvent.TextMessage;
-                        string content = "已经收到您的留言了，小编看了后会立马回复您的！";
+                        string content = "";
                         if (CommonBLL.dic.ContainsKey(model.Content))
                         {
                             content = CommonBLL.dic[model.Content];
@@ -196,6 +212,11 @@ namespace WXProjectWeb.Controllers
                         if (model.Content.Contains("合作") || model.Content.Contains("广告") || model.Content.Contains("投放"))
                         {
                             content = "合作请加微信号：xiaochaokefu";
+                        }
+                        if (content == "")
+                        {
+                            return Content("");
+
                         }
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                         {
