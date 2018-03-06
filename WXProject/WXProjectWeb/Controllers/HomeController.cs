@@ -80,11 +80,9 @@ namespace WXProjectWeb.Controllers
                                 var arr = model.EventKey.Split(new char[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
                                 string toUserOpenid = arr[0];
                                 string key = arr[1];
-                                var user = UserBLL.GetUserInfo(toUserOpenid);
-
+                                var user = UserBLL.SaveUserShareCount(toUserOpenid,key);
                                 //根据不同的活动添加/更新数据
-                                UserBLL.UpdateUser(user);
-                                var count = 0;
+                                var count = user.count;
 
 
                                 string remarkvalue = "";
