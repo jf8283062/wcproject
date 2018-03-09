@@ -176,6 +176,9 @@ namespace WXProjectWeb.wcApi
 
     public class EFDbContext : DbContext
     {
+        //public EFDbContext() : base("EFDbContext")
+        //{
+        //}
         public DbSet<UserInfo> UserInfos { get; set; }
 
         public DbSet<ShareCount> ShareCount { get; set; }

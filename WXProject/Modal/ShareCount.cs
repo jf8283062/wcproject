@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Modal
 {
-    [Table("UserInfo")]
+    [Table("ShareCount")]
     public class ShareCount
     {
         /// <summary>

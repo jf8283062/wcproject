@@ -61,7 +61,7 @@ namespace WXProjectWeb.ImgCom
         }
 
 
-        public static Dictionary<string, MemoryStream> ms = null;
+        public static Dictionary<string, MemoryStream> ms = new Dictionary<string, MemoryStream>();
 
         /// <summary>
         /// 获取背景图片

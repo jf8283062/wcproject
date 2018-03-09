@@ -89,7 +89,7 @@ namespace WXProjectWeb.Controllers
                                 #region 生成分享活动不同生成不同的回复
                                 switch (key)
                                 {
-                                    case "GETPICTUER":
+                                    case "getpica":
                                         if (count < 5)
                                         {
                                             remarkvalue = @"恭喜：
@@ -117,7 +117,7 @@ namespace WXProjectWeb.Controllers
 2、建议转发完整地址到电脑上操作,手打地址容易出错。";
                                         }
                                         break;
-                                    case "GETPICTUER2":
+                                    case "getpica1":
                                         if (count < 5)
                                         {
                                             remarkvalue = @"恭喜：
@@ -145,6 +145,33 @@ namespace WXProjectWeb.Controllers
 2、建议转发完整地址到电脑上操作,手打地址容易出错。";
                                         }
                                         break;
+                                    case "getpica2":
+                                        if (count < 5)
+                                        {
+                                            remarkvalue = @"恭喜：
+您的好友" + fromUser.nickname + @"来支持你啦!
+亲,还需" + (5 - count) + @"位小伙伴扫码支持
+就可以免费领取：：
+【苏教版小学语文资料】";
+
+                                        }
+                                        else if (count == 5)
+                                        {
+                                            remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
+你是一位重视教育的好家长，
+孩子一定会越来越棒！
+
+苏教版小学语文资料
+链接：https://pan.baidu.com/s/1VX-ujFY1dCKHm3S1vDVc7A 密码：bpaw
+
+
+后续我们还会提供更多实用的免费资料。
+
+提醒：
+1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
+2、建议转发完整地址到电脑上操作,手打地址容易出错。。";
+                                        }
+                                        break;
                                     default:
                                         break;
                                 }
@@ -164,8 +191,9 @@ namespace WXProjectWeb.Controllers
 工作之余，
 在这里分享教育心得。
 
-如需要领取免费资料，
-请点击底部的菜单。"
+领取提示：
+热门资料，点击底部菜单获取。
+其它资料，请回复相应的关键词获取。"
                         });
                         return Content(resStr);
 
@@ -185,7 +213,7 @@ namespace WXProjectWeb.Controllers
                         }
                         switch (model.EventKey)
                         {
-                            case "GETPICTUER":
+                            case "getpica":
                                 CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
 欢迎来到小学生微学习。
 正在为您生成专属任务海报。
@@ -195,14 +223,26 @@ namespace WXProjectWeb.Controllers
 
 我们郑重承诺：本活动真实有效。");
                                 break;
-                            case "GETPICTUER2":
+                            case "getpica1":
                                 CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
-欢迎来到小学生微学习。
 正在为您生成专属任务海报。
 
-把海报分享给家长朋友，
-获5人扫码即可免费领取价值千元的【幼升小英语启蒙课】
+把海报分享到朋友圈，
+获5人扫码即可免费领取经典资料【满分阅读51套答题公式】
 
+我们郑重承诺：本活动真实有效。");
+                                break;
+                            case "getpica2":
+                                CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
+正在为您生成领资料海报。
+
+把海报分享到朋友圈，获朋友扫码支持，
+即可免费领取苏教版语文资料。
+
+备注：
+如果不方便分享，也可以加老师xuexi005
+发资料名称，即可索取。
+因人多，老师回复慢，请见谅。
 我们郑重承诺：本活动真实有效。");
                                 break;
                             default:

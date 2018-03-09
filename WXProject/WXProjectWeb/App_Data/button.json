@@ -11,12 +11,17 @@
         {
           "name": "英语启蒙课",
           "type": "click",
-          "key": "GETPICTUER"
+          "key": "getpica"
         },
         {
           "name": "满分阅读资料",
           "type": "click",
-          "url": "GETPICTUER2"
+          "key": "getpica1"
+        },
+        {
+          "name": "苏教版语文下册",
+          "type": "click",
+          "key": "getpica2"
         }
       ]
     },
