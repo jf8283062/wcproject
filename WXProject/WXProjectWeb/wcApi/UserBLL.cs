@@ -145,6 +145,18 @@ namespace WXProjectWeb.wcApi
                 return modal;
             }
         }
+
+        public static ShareCount Update(ShareCount shareCount)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                var modal = db.ShareCount.Where(o => o.ID == shareCount.ID).FirstOrDefault();
+                modal.count = shareCount.count;
+                modal.type = shareCount.type;                
+                int row = db.SaveChanges();
+                return modal;
+            }
+        }
         public static ShareCount GetUserShareCount(string useropenid, string type)
         {
             using (EFDbContext db = new EFDbContext())
@@ -167,8 +179,11 @@ namespace WXProjectWeb.wcApi
                     type = type,
                     openid = useropenid
                 };
+                SaveShareCount(model);
+
             }
             SaveShareCount(model);
+
             return model;
         }
     }
