@@ -4,9 +4,24 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - 我的 ASP.NET 应用程序</title>
+    <title>微信后台</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    @*<script src="~/Scripts/bootstrap.min.js"></script>
+        <link href="~/Content/bootstrap.css" rel="stylesheet" />
+        <link href="~/Content/Site.css" rel="stylesheet" />*@
+    <!-- 引入Vue -->
+    <script src="//v1.vuejs.org/js/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
+    <!-- 引入组件库 -->
+    <script src="//unpkg.com/iview@1.0.1/dist/iview.min.js"></script>
+    <style type="text/css">
+        .navigate a {
+            color:#000;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -28,14 +43,35 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 应用程序</p>
-        </footer>
-    </div>
 
+    <div style="margin:60px auto;width:1180px;" class="wrapper-container">
+        <div class="ivu-row">
+            <div class="wrapper-navigate ivu-col ivu-col-span-4">
+                <div class="navigate">
+                    <ul class="ivu-menu ivu-menu-light ivu-menu-vertical" style="width: auto;">
+                        <li class="ivu-menu-item @if (ViewBag.Tab=="button")
+	{
+		@:ivu-menu-item-active ivu-menu-item-selected
+	} "><a href="/CMS/index">按钮设置 </a></li>
+                        <li class="ivu-menu-item @if (ViewBag.Tab=="res")
+	{
+		@:ivu-menu-item-active ivu-menu-item-selected
+	}"><a href="/CMS/SetButton">自动回复</a></li>
+                        @*<li class="ivu-menu-item"> 国际化 </li>
+                            <li class="ivu-menu-item"> 定制主题 </li>
+                            <li class="ivu-menu-item"> 概览 </li>*@
+                    </ul>
+                </div>
+            </div>
+            <div class="ivu-col ivu-col-span-20">
+                <div class="wrapper-content ivu-article">
+                    <article>
+                        @RenderBody()
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

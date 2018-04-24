@@ -64,7 +64,7 @@
             var remeber = $("#remeber").val();
             var _data = { "username": username, "password": password, "remeber": remeber, };
             $.ajax({
-                url: "/login",
+                url: "/cms/PostLogin",
                 async: false,
                 data: _data,
                 dataType: "json",

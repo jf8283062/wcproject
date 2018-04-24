@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WXProjectWeb.App_Start;
 
 namespace WXProjectWeb.Controllers
 {
@@ -13,6 +14,7 @@ namespace WXProjectWeb.Controllers
             ViewBag.HasCookies = Request.Cookies["user"] != null ;
             return View();
         }
+        
         public JsonResult PostLogin(string username, string password, string remeber)
         {
             if (username == "admin" && password == "admin")
@@ -22,11 +24,13 @@ namespace WXProjectWeb.Controllers
             return Json(new
             {
                 success = true
-            });
+            },JsonRequestBehavior.AllowGet);
         }
-        // GET: CMS
+
+        [AuthorizeFilterAttribute]
         public ActionResult Index()
         {
+            ViewBag.Tab = "button";
             return View();
         }
     }
