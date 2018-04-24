@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Modal
 {
-    [Table("UserInfo")]
+    [Table("ShareCount")]
     public class ShareCount
     {
         /// <summary>
         /// id
         /// </summary>
-        public int ID { get; set; }
+        public long ID { get; set; }
         /// <summary>
         /// 用户ID
         /// </summary>

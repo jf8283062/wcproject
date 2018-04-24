@@ -47,7 +47,7 @@ namespace WXProjectWeb.wcApi
         {
             using (EFDbContext db = new EFDbContext())
             {
-                 return db.UserInfos.Where(o => o.openid == openid).FirstOrDefault();
+                return db.UserInfos.Where(o => o.openid == openid).FirstOrDefault();
             }
         }
 
@@ -55,7 +55,7 @@ namespace WXProjectWeb.wcApi
         {
             using (EFDbContext db = new EFDbContext())
             {
-                var modal=db.UserInfos.Add(user);
+                var modal = db.UserInfos.Add(user);
                 int row = db.SaveChanges();
                 return modal;
             }
@@ -106,7 +106,7 @@ namespace WXProjectWeb.wcApi
             parameters[8].Value = user.headimgurl;
             parameters[9].Value = user.subscribe_time;
             parameters[10].Value = user.count;
-            int rows= DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+            int rows = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
             return rows;
         }
 
@@ -135,11 +135,68 @@ namespace WXProjectWeb.wcApi
 
             return returnVal;
         }
+
+        public static ShareCount SaveShareCount(ShareCount shareCount)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                var modal = db.ShareCount.Add(shareCount);
+                int row = db.SaveChanges();
+                return modal;
+            }
+        }
+
+        public static ShareCount Update(ShareCount shareCount)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                var modal = db.ShareCount.Where(o => o.ID == shareCount.ID).FirstOrDefault();
+                modal.count = shareCount.count;
+                modal.type = shareCount.type;                
+                int row = db.SaveChanges();
+                return modal;
+            }
+        }
+        public static ShareCount GetUserShareCount(string useropenid, string type)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                return db.ShareCount.Where(o => o.openid == useropenid && o.type == type).FirstOrDefault();
+            }
+        }
+        public static ShareCount SaveUserShareCount(string useropenid, string type)
+        {
+            var model = GetUserShareCount(useropenid, type);
+            if (model != null)
+            {
+                model.count = model.count + 1;
+            }
+            else
+            {
+                model = new ShareCount()
+                {
+                    count = 1,
+                    type = type,
+                    openid = useropenid
+                };
+                SaveShareCount(model);
+
+            }
+            SaveShareCount(model);
+
+            return model;
+        }
     }
 
 
     public class EFDbContext : DbContext
     {
+        //public EFDbContext() : base("EFDbContext")
+        //{
+        //}
         public DbSet<UserInfo> UserInfos { get; set; }
+
+        public DbSet<ShareCount> ShareCount { get; set; }
+
     }
 }

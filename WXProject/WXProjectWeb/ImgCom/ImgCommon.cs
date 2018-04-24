@@ -38,7 +38,7 @@ namespace WXProjectWeb.ImgCom
                     using (Image QRcodeImg = Image.FromStream(QRcodeImgStream))
                     {
                         var QRcode = QRcodeImg.GetThumbnailImage(120, 120, null, IntPtr.Zero);
-                        g.DrawImage(QRcode, new Rectangle(backgroundImg.Width/2 - QRcode.Width/2, backgroundImg.Height - QRcode.Height -100 , QRcode.Width, QRcode.Height));
+                        g.DrawImage(QRcode, new Rectangle(backgroundImg.Width / 2 - QRcode.Width / 2, backgroundImg.Height - QRcode.Height - 100, QRcode.Width, QRcode.Height));
 
                     }
                     if (!string.IsNullOrEmpty(name))
@@ -58,6 +58,36 @@ namespace WXProjectWeb.ImgCom
                 }
 
             }
+        }
+
+
+        public static Dictionary<string, MemoryStream> ms = new Dictionary<string, MemoryStream>();
+
+        /// <summary>
+        /// 获取背景图片
+        /// </summary>
+        /// <param name="imgName"></param>
+        /// <returns></returns>
+        public static MemoryStream GetBGImgMemoryStream(string imgName)
+        {
+            if (ms.ContainsKey(imgName))
+            {
+                return ms[imgName];
+            }
+            else
+            {
+                var bgpath = AppDomain.CurrentDomain.BaseDirectory + "\\img\\" + imgName + ".jpg";
+                FileStream fs = new FileStream(bgpath, FileMode.Open);
+                byte[] data = new byte[fs.Length];
+                fs.Read(data, 0, data.Length);
+                fs.Close();
+                fs.Dispose();
+                var msx = new MemoryStream(data);
+                ms.Add(imgName, msx);
+                return msx;
+            }
+
+
         }
     }
 }
