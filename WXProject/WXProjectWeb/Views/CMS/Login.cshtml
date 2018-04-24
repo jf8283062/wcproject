@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>微信后台管理</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">微信后台管理 - WeChart</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        <div style="    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;">
+            <form id="register" class="form-signin">
+                <h2 class="form-signin-heading">请登录</h2>
+                <label for="inputEmail">用户名</label>
+                <input type="text" id="inputEmail" class="form-control" placeholder="用户名" value="@ViewBag.UName" required="" autofocus="">
+                <label for="inputPassword">Password</label>
+                <input type="password" id="inputPassword" class="form-control" placeholder="密码" required="">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checked="checked" id="remeber" name="remeber" value="1"> 记住密码
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">登 录</button>
+            </form>
+        </div>
+        @*<hr />
+        <footer>
+            <p>&copy; 2017 - Hollysys.SSO</p>
+        </footer>*@
+    </div>
+    <script type="text/javascript">
+        var isLogin =  @(ViewBag.HasCookies!=null&&ViewBag.HasCookies?1:0);
+            $(function () {
+                if (isLogin) {
+                    //window.opener.callback();
+                    window.location.href = '/cms/index';
+                }
+            $('#register').submit(function () {
+                login();
+                return false;
+            })
+        })
+        function login() {
+            var username = $("#inputEmail").val();
+            var password = $("#inputPassword").val();
+            var remeber = $("#remeber").val();
+            var _data = { "username": username, "password": password, "remeber": remeber, };
+            $.ajax({
+                url: "/login",
+                async: false,
+                data: _data,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = '/cms/index';
+                    } else {
+                        alert("账户或密码错误！请从新输入！")
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 200) {
+                        var re = JSON.parse(data.responseText);
+                        if (re.success) {
+                            if (opener!=null) {
+                                //window.opener.callback();
+                                window.location.href = callBackUrl;
+
+                            }
+                        } else {
+                            alert("账户或密码错误！请从新输入！")
+                        }
+                    } else {
+                        alert(data);
+                        alert("发生异常！请联系管理员或稍后再试！")
+                    }
+                }
+
+            })
+            console.log(remeber);
+        }
+    </script>
+</body>
+</html>
