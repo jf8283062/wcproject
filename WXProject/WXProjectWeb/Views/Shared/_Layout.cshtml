@@ -1,25 +1,34 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>微信后台</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    
+
+    <script src="~/Scripts/vue.js"></script>
+    <script src="~/Scripts/vue-resource.common.js"></script>
+    <script src="~/Content/dist/iview.min.js"></script>
+    <link href="~/Content/dist/styles/iview.css" rel="stylesheet" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <script src="~/Content/index.js"></script>
+    <link href="~/Content/base.css" rel="stylesheet" />
+
     @*<script src="~/Scripts/bootstrap.min.js"></script>
         <link href="~/Content/bootstrap.css" rel="stylesheet" />
         <link href="~/Content/Site.css" rel="stylesheet" />*@
     <!-- 引入Vue -->
-    <script src="//v1.vuejs.org/js/vue.min.js"></script>
+    @*<script src="//v1.vuejs.org/js/vue.min.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
     <!-- 引入组件库 -->
-    <script src="//unpkg.com/iview@1.0.1/dist/iview.min.js"></script>
+    <script src="//unpkg.com/iview@1.0.1/dist/iview.min.js"></script>*@
     <style type="text/css">
         .navigate a {
-            color:#000;
+            color: #000;
         }
     </style>
 </head>
@@ -56,7 +65,7 @@
                         <li class="ivu-menu-item @if (ViewBag.Tab=="res")
 	{
 		@:ivu-menu-item-active ivu-menu-item-selected
-	}"><a href="/CMS/SetButton">自动回复</a></li>
+	}"><a href="/CMS/AutoReply">自动回复</a></li>
                         @*<li class="ivu-menu-item"> 国际化 </li>
                             <li class="ivu-menu-item"> 定制主题 </li>
                             <li class="ivu-menu-item"> 概览 </li>*@

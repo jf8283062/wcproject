@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoReply.cs" />
     <Compile Include="BaseMsg.cs" />
     <Compile Include="ShareCount.cs" />
     <Compile Include="UserInfo.cs" />
