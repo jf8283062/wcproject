@@ -1,1 +1,25 @@
-﻿index
+﻿<div id="app">
+
+    <ul class="apiApp_menu_showList js_main_menuList">
+        <li class="apiApp_menu_showItem" data-id="">
+            <dl class="apiApp_menu_showItem_cnt">
+                <dt class="apiApp_menu_showItem_cnt_title">菜单1</dt>
+                <dd class="apiApp_menu_showItem_cnt_menuName apiApp_menu_showItem_cnt_menuName_First">自助服务</dd>
+                <dd class="apiApp_menu_showItem_cnt_menuName">密码修改</dd>
+                <a href="javascript:;" class="apiApp_menu_showItem_cnt_editBtn js_enter_menuEdit" data-id="level-1006">
+                    <span class="ww_icon ww_icon_Edit">x</span>
+                </a>
+            </dl>
+        </li>
+        <li class="apiApp_menu_showItem apiApp_menu_showItem_AddMenu"><a href="javascript:;" class="js_enter_menuEdit">添加主菜单</a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'sadfsafsdafsdafsdafsdafsdafsdafsdafsafsafsdafsdafsda'
+        }
+    })
+</script>
