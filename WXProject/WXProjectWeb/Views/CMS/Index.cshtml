@@ -1,18 +1,212 @@
-﻿<div id="app">
+﻿<style>
+    li, ul, ol {
+        list-style: none;
+    }
 
-    <ul class="apiApp_menu_showList js_main_menuList">
-        <li class="apiApp_menu_showItem" data-id="">
-            <dl class="apiApp_menu_showItem_cnt">
-                <dt class="apiApp_menu_showItem_cnt_title">菜单1</dt>
-                <dd class="apiApp_menu_showItem_cnt_menuName apiApp_menu_showItem_cnt_menuName_First">自助服务</dd>
-                <dd class="apiApp_menu_showItem_cnt_menuName">密码修改</dd>
-                <a href="javascript:;" class="apiApp_menu_showItem_cnt_editBtn js_enter_menuEdit" data-id="level-1006">
-                    <span class="ww_icon ww_icon_Edit">x</span>
-                </a>
-            </dl>
-        </li>
-        <li class="apiApp_menu_showItem apiApp_menu_showItem_AddMenu"><a href="javascript:;" class="js_enter_menuEdit">添加主菜单</a></li>
-    </ul>
+    dt {
+        display: block;
+    }
+
+    a, a:hover {
+        color: #0C4C7F;
+    }
+
+    .apiApp_menu_showList {
+        border-top: 1px solid #E4E6E9;
+    }
+
+    .apiApp_menu_showItem {
+        border-bottom: 1px solid #E4E6E9;
+        padding: 17px 8px 18px;
+    }
+
+    .apiApp_menu_showItem_cnt_title {
+        color: #787878;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .apiApp_menu_showItem_cnt .apiApp_menu_showItem_cnt_menuName_First {
+        line-height: 28px;
+        font-size: 18px;
+    }
+
+    .apiApp_menu_showItem_cnt_menuName {
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: #373737;
+    }
+
+    .apiApp_menu_showItem_cnt_editBtn {
+        position: absolute;
+        right: 9px;
+        top: 9px;
+    }
+
+    .ww_icon_Edit {
+        background-image: url('../../img/icons$ac4e4089.png');
+        height: 14px;
+        width: 14px;
+        background-position: -678px -865px;
+    }
+
+    .ww_icon {
+        display: inline-block;
+        overflow: hidden;
+        font-size: 0;
+        line-height: 0;
+    }
+
+    .apiApp_menu_showItem_AddMenu a {
+        display: block;
+        height: 100%;
+        line-height: 90px;
+        font-size: 18px;
+        text-indent: 8px;
+        font-weight: 300;
+    }
+
+    .apiApp_menu_setMenu {
+        position: relative;
+        background-color: #F9F9FA;
+        padding: 0 15px 44px;
+        min-height: 490px;
+        width: 530px;
+    }
+
+    .apiApp_menu_setMenu_header {
+        position: relative;
+        padding-top: 18px;
+    }
+
+        .apiApp_menu_setMenu_header .apiApp_menu_setMenu_header_title {
+            display: inline-block;
+            margin-bottom: 4px;
+            margin-right: 10px;
+            font-size: 12px;
+            color: #787878
+        }
+
+        .apiApp_menu_setMenu_header .ww_inputText_FullWidth {
+            font-size: 12px;
+            width: 100%;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            height: 30px;
+        }
+
+    .ww_inputText_Big, .ww_textarea_Big {
+        width: 252px;
+        padding: 5px 6px;
+        font-size: 14px;
+    }
+
+    .apiApp_menu_setMenu_header .ww_icon_Trash {
+        position: absolute;
+        right: 1px;
+        top: 20px;
+        cursor: pointer;
+    }
+
+    .ww_icon_Trash {
+        background-position: -933px -70px;
+        width: 12px;
+    }
+
+    .ww_icon_Trash, .ww_icon_UnPublished {
+        background-image: url(../../img/icons$ac4e4089.png);
+        height: 14px;
+    }
+
+    .ww_icon {
+        display: inline-block;
+        overflow: hidden;
+        font-size: 0;
+        line-height: 0;
+    }
+    .apiApp_menuInfoPanel_header {
+        padding-top: 13px;
+    }
+        .apiApp_menuInfoPanel_header .apiApp_menuInfoPanel_header_title {
+            display: inline-block;
+            margin-bottom: 4px;
+            margin-right: 10px;
+            color: #787878;
+        }
+    .apiApp_menuInfoPanel_body {
+        padding-top: 18px;
+    }
+    .apiApp_menuInfoPanel_list .apiApp_menuInfoPanel_item_title {
+        float: left;
+        width: 60px;
+        margin-right: 8px;
+        text-align: right;
+        color: #787878;
+        line-height: 26px;
+    }
+    .apiApp_menuInfoPanel_closeBtn {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        cursor: pointer;
+    }
+    .apiApp_menuInfoPanel_body {
+        padding-top: 18px;
+    }
+</style>
+<div id="app">
+    <div id="detail">
+        <ul class="apiApp_menu_showList js_main_menuList">
+            <li class="apiApp_menu_showItem" data-id="">
+                <dl class="apiApp_menu_showItem_cnt">
+                    <dt class="apiApp_menu_showItem_cnt_title">菜单1</dt>
+                    <dd class="apiApp_menu_showItem_cnt_menuName apiApp_menu_showItem_cnt_menuName_First">自助服务</dd>
+                    <dd class="apiApp_menu_showItem_cnt_menuName">密码修改</dd>
+                    <a href="javascript:;" class="apiApp_menu_showItem_cnt_editBtn js_enter_menuEdit" data-id="level-1006">
+                        <span class="ww_icon ww_icon_Edit">x</span>
+                    </a>
+                </dl>
+            </li>
+            <li class="apiApp_menu_showItem apiApp_menu_showItem_AddMenu"><a href="javascript:;" class="js_enter_menuEdit">添加主菜单</a></li>
+        </ul>
+    </div>
+    <div id="detail">
+        <div class="apiApp_menu_setMenu js_menu_edit_container">
+            <div>
+                <div class="apiApp_menu_setMenu_header ww_inputWithTips ww_inputWithTips_WithErr">
+                    <span class="apiApp_menu_setMenu_header_title">主菜单</span>
+                    <input type="text" name="name" value="" class="qui_inputText ww_inputText ww_inputText_Big ww_inputText_FullWidth js_main_menu_name js_menu_fresh_preview">
+                    <span class="ww_icon ww_icon_Trash js_delMainMenu"></span>
+                </div>
+                <div class="js_subMenu_container">
+                    <div class="apiApp_menuInfoPanel apiApp_menuInfoPanel_JumpType">
+                        <div class="apiApp_menuInfoPanel_header ww_inputWithTips">
+                            <span class="apiApp_menuInfoPanel_header_title">子菜单</span>
+                            <span class="ww_inputWithTips_tips"></span>
+                            <input type="text" name="level-890-891_name" submenu_name="" value="密码修改" required="" required-msg="请输入子菜单名字" maxlengthbychar="16" maxlengthbychar-msg="子菜单名字不多于8个汉字或16个字母" class="qui_inputText ww_inputText ww_inputText_Big ww_inputText_FullWidth js_menu_fresh_preview" aria-required="true">
+                        </div>
+                        <div class="apiApp_menuInfoPanel_body">
+                            <ul class="apiApp_menuInfoPanel_list">
+                                <li class="apiApp_menuInfoPanel_item">
+                                    <div class="apiApp_menuInfoPanel_item_title">菜单内容:</div>
+                                    <div class="ww_btnWithMenu js_sub_menuDropdown_level-890-891 js_sub_menuDropdown">
+                                        <select>
+                                            <option>dsafsdaf</option>
+                                        </select>
+                                    </div>
+                                </li>
+                                <li class="apiApp_menuInfoPanel_item apiApp_menuInfoPanel_item_JumpType">
+                                    <div class="apiApp_menuInfoPanel_item_title">网址:</div>
+                                    <div class="apiApp_menuInfoPanel_item_content ww_inputWithTips"><input type="text" name="level-890-891_url" value="" required="" required-msg="请输入网址" validateprotocol="true" class="qui_inputText ww_inputText ww_inputText_FullWidth js_validateURL" aria-required="true"> <span class="ww_inputWithTips_tips"></span></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="ww_icon ww_icon_Trash apiApp_menuInfoPanel_closeBtn js_delSubMenu"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
 

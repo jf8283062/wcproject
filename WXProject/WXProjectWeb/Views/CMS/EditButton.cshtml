@@ -1,0 +1,70 @@
+﻿<div id="app" class="container">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>事件</th>
+            <th>值</th>
+            <th style="width:200px;">操作</th>
+        </tr>
+        <tr v-for="itemData in pageData">
+            <td>{{itemData.id}}</td>
+            <td>{{itemData.name}}</td>
+            <td>{{itemData.type}}</td>
+            <td>{{itemData.value}}</td>
+            <td>
+                <button type="button" v-show="itemData.type == 'base'" @@click="editSubbutton(itemData.id)" class="btn btn-xs btn-info">子菜单编辑</button>
+                <button type="button" @@click="edit(itemData.id)" class="btn btn-xs btn-info">修改</button>
+                <button type="button" @@click="deletebtn(itemData.id)" class="btn btn-xs btn-danger">删除</button>                
+            </td>
+
+        </tr>
+    </table>
+    <div>
+        <button v-show="pageData.length<3" type="button" @@click="add()" class="btn btn-xs btn-info">添加</button>
+    </div>
+</div>
+<script type="text/javascript">
+
+    Vue.http.options.emulateJSON = true;
+    Vue.http.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    };
+    var list = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.List));
+    var app = new Vue({
+        el: '#app',
+        data: {
+            pageData: list
+        },
+        methods: {
+            edit: function (id) {
+                window.location = "/CMS/EditBaseButton/" + id;
+            },
+            deletebtn: function (id) {
+                var that = this;
+                this.$http.post('/CMS/deleteButton',
+                    {id:id}
+                ).then(function (res) {
+                    if (res.body.status == 1) {                        
+                        window.location.href = "/CMS/EditButton"
+                    } else {
+                        that.$Message.error('发生异常，或联系管理员!');
+                    }
+                }, function (erro) {
+                    that.$Message.error('发生异常，请稍后再试，或联系管理员!');
+
+                }).then(function (res) {
+
+                });
+            },
+            editSubbutton: function (id) {
+                window.location = "/CMS/EditSubButton/" + id;
+            },
+            add: function () {
+                if (this.pageData.length < 3) {
+                    window.location = "/CMS/EditBaseButton/" + 0;
+                }
+            }
+        }
+    })
+</script>

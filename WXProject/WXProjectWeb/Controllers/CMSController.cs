@@ -39,6 +39,84 @@ namespace WXProjectWeb.Controllers
             return View();
         }
 
+        [AuthorizeFilterAttribute]
+        public ActionResult EditButton()
+        {
+            ViewBag.Tab = "button";
+            var list = ButtonBLL.GetBaseButton();
+            ViewBag.List = list;
+            return View();
+        }
+
+        [AuthorizeFilterAttribute]
+        public ActionResult DeleteButton(int id)
+        {
+            ViewBag.Tab = "button";
+            ButtonBLL.Delete(id);
+            return Json(new { status = 1 });
+        }
+
+        [AuthorizeFilterAttribute]
+        public ActionResult EditBaseButton(int id)
+        {
+            ViewBag.Tab = "button";
+            var model = ButtonBLL.Get(id);
+            if (model == null)
+            {
+                model = new Button();
+            }
+            ViewBag.Entity = model;
+            return View();
+        }
+        [AuthorizeFilterAttribute]
+        public ActionResult PostButtonData(int id, string type, string name,string value,int baseid)
+        {
+            if (id!=0)
+            {
+                var btn = ButtonBLL.Get(id);
+                btn.baseid = baseid;
+                btn.value = value;
+                btn.type = type;
+                btn.name = name;
+
+                ButtonBLL.Modify(btn);
+            }
+            else
+            {
+                var btn = new Button();
+                btn.baseid = baseid;
+                btn.value = value;
+                btn.type = type;
+                btn.name = name;
+                ButtonBLL.Save(btn);
+            }
+            return Json(new { status = 1 });
+        }
+        [AuthorizeFilterAttribute]
+        public ActionResult EditSubButton(int id)
+        {
+            var model = ButtonBLL.Get(id);
+            var list = ButtonBLL.GetSubButton(id);
+            if (model == null)
+            {
+                return RedirectToAction("EditButton");
+            }
+            ViewBag.Entity = model;
+            ViewBag.List = list;
+            return View();
+        }
+        public ActionResult EditSubButtondetail(int id  = 0 ,int baseid = 0)
+        {
+            ViewBag.Tab = "button";
+            var model = ButtonBLL.Get(id);
+            if (model == null)
+            {
+                model = new Button() { baseid = baseid };
+            }
+            ViewBag.Entity = model;
+            return View();
+        }
+
         #region
         [AuthorizeFilterAttribute]
         public ActionResult AutoReply()

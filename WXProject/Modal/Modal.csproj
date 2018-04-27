@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoReply.cs" />
+    <Compile Include="Button.cs" />
     <Compile Include="BaseMsg.cs" />
     <Compile Include="ShareCount.cs" />
+    <Compile Include="SubButton.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="WeiXinEvent\ClickEvent.cs" />
     <Compile Include="WeiXinEvent\EventEnum.cs" />

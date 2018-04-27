@@ -1,0 +1,84 @@
+﻿
+<div id="app" class="container">
+    <i-form ref="entity" :model="entity" label-position="right" :rules="ruleValidate" :label-width="200">
+        <Form-item label="名称" prop="name">
+            <i-input v-model="entity.name" style="width:50%"></i-input>
+        </Form-item>
+        <Form-item label="类型" prop="type">
+            <i-select @@on-change="change" v-model="entity.type" placeholder="请选择" style="width:200px">
+                <i-option v-for="item in selectData" :value="item.id" :key="item.id">{{ item.val }}</i-option>
+            </i-select>
+        </Form-item>
+        <Form-item label="值" prop="value">
+            <i-input v-model="entity.value" style="width:50%"></i-input>
+        </Form-item>
+        <Form-item>
+            <i-button type="primary" @@click="Submit('entity')" style="margin-left:180px">提交</i-button>
+            <i-button style="margin-left:50px" @@click="handleCancel()">取消</i-button>
+        </Form-item>
+    </i-form>
+</div>
+<script type="text/javascript">
+      Vue.http.options.emulateJSON = true;
+    Vue.http.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    };
+    var mode = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Entity));
+    var app = new Vue({
+        el: '#app',
+        data: {
+            selectData: [{ "id": "view", "val": "链接" }, { "id": "click", "val": "按钮" }],
+            entity: mode,
+            ruleValidate: {
+                name: [
+                    { required: true, message: '名称不能为空' }
+                ],
+                type: [
+                    { required: true, message: '类型不能为空' }
+                ]
+                //value: [
+                //    { required: true, message: '投票结束时间不能为空' }
+                //],
+            },
+            isShow: true
+        },
+        methods: {
+            change: function (item) {
+                if (item =='base') {
+                    this.isShow = false;
+                }
+            },
+            Submit: function (name) {
+                var that = this;
+                this.$refs[name].validate(function (valid) {
+                    if (valid) {
+                        that.postData();
+                    } else {
+                        //that.$Message.error('表单验证失败!');
+                    }
+                })
+            },
+            handleCancel: function () {
+                window.location.href = "/CMS/EditSubButton/" + entity.baseid
+            },
+            postData: function () {
+                var that = this;
+                this.$http.post('/CMS/PostButtonData',
+                    that.entity
+                ).then(function (res) {
+                    if (res.body.status == 1) {
+                        that.$Message.info('保存成功!');
+                        window.location.href = "/CMS/EditSubButton/" + that.entity.baseid
+                    } else {
+                        that.$Message.error('发生异常，或联系管理员!');
+                    }
+                }, function (erro) {
+                    that.$Message.error('发生异常，请稍后再试，或联系管理员!');
+
+                }).then(function (res) {
+
+                });
+            },
+        }
+    });
+</script>
