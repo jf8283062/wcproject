@@ -16,41 +16,89 @@ namespace WXProjectWeb.wcApi
     public class AutoReplyBLL
     {
 
-
         /// <summary>
-        /// 获取回复内容信息
+        /// 获取所有回复内容信息
         /// </summary>
         /// <returns></returns>
-        public static List<AutoReply> GetBasicServiceInfo()
+        public static List<AutoReply> GetAutoReplyInfo()
         {
-            List<AutoReply> list = new List<AutoReply>();
-            list.Add(new AutoReply() { ID = 1, Question = "1", ReplyContent = "1111" });
-            return list;
+            using (EFDbContext db = new EFDbContext())
+            {
+                return db.AutoReply.Where(o=>o.Flag==0).ToList();
+            }
         }
 
         /// <summary>
         /// 更新回复内容
         /// </summary>
-        /// <param name="bs"></param>
+        /// <param name="modal"></param>
         /// <returns></returns>
-        public static int UpdateAutoReplyInfo(Modal.AutoReply bs)
+        public static int UpdateAutoReplyInfo(Modal.AutoReply modal)
         {
-            //return dal.UpdateBasicServiceInfo(bs);
-           // return SimpleHelp.Update<T_BasicServiceInfo>(bs);
-            return 1;
+
+            using (EFDbContext db = new EFDbContext())
+            {
+                db.AutoReply.Attach(modal);
+                db.Entry(modal).State = EntityState.Modified;
+                return db.SaveChanges();
+            }
         }
 
         /// <summary>
         /// 添加回复内容
         /// </summary>
-        /// <param name="bs"></param>
+        /// <param name="modal"></param>
         /// <returns></returns>
-        public static AutoReply AddNewAutoReplyInfo(AutoReply bs)
+        public static AutoReply AddNewAutoReplyInfo(AutoReply modal)
         {
-            //return dal.AddNewBasicServiceInfo(bs);
-            // return SimpleHelp.Add(bs);
+            using (EFDbContext db = new EFDbContext())
+            {
+                var entiy = db.AutoReply.Add(modal);
+                int row = db.SaveChanges();
+                return entiy;
+            }
+        }
 
-            return new AutoReply() { ID = 2, Question = "2", ReplyContent = "222" };
+
+        /// <summary>
+        /// 查询自动回复的内容
+        /// </summary>
+        /// <param name="question"></param>
+        /// <returns></returns>
+        public static string GetContentbyQuestion(string question)
+        {
+            List<AutoReply> entityList = new List<AutoReply>();
+            using (EFDbContext db = new EFDbContext())
+            {
+                entityList = db.AutoReply.Where(o => o.Question.Contains(question)).ToList();
+            }
+
+            string sendMsg = "";
+            try
+            {
+                string InstanceDataSQL1 = "select ReplyContent  from AutoReply  A  where  A.Question like '%" + question + "%' ";
+                DataSet ds = DbHelperSQL.Query("ConnectionStringh", InstanceDataSQL1);
+                int rows = ds.Tables[0].Rows.Count;
+                if (entityList.Count > 0)
+                {
+
+                    foreach (var  obj in entityList)
+                    {
+                        sendMsg += obj.ReplyContent + "\n";
+                        sendMsg += "-------------\n";
+                    }
+                }
+                else
+                {
+                    sendMsg = "没有符合问题的内容";
+                }
+
+            }
+            catch
+            {
+                sendMsg = "系统异常!!!请稍后查询";
+            }
+            return sendMsg;
         }
     }
 }
