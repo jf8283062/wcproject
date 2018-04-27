@@ -22,6 +22,8 @@
     </table>
     <div>
         <button v-show="pageData.length<3" type="button" @@click="add()" class="btn btn-xs btn-info">添加</button>
+
+        <button type="button" @@click="updateSERVER()" class="btn btn-xs btn-info">向服务器更新按钮</button>
     </div>
 </div>
 <script type="text/javascript">
@@ -64,6 +66,23 @@
                 if (this.pageData.length < 3) {
                     window.location = "/CMS/EditBaseButton/" + 0;
                 }
+            },
+            updateSERVER: function () {
+                var that = this;
+                this.$http.post('/WXCheck/WeiXin',
+                    { id: id }
+                ).then(function (res) {
+                    //if (res.body.status == 1) {
+                    //    window.location.href = "/CMS/EditButton"
+                    //} else {
+                    //    that.$Message.error('发生异常，或联系管理员!');
+                    //}
+                }, function (erro) {
+                    that.$Message.error('发生异常，请稍后再试，或联系管理员!');
+
+                }).then(function (res) {
+
+                });
             }
         }
     })
