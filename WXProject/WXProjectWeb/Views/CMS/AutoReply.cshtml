@@ -7,12 +7,36 @@
     <div class="searchDiv">
         <h2 class="titl">自动回复管理</h2>
         <div class="searche_con">
-            <i-button type="primary"  class="fr" size="small">添加</i-button>
+            <i-button type="primary" v-on:click="addNewItem" class="fr" size="small">添加</i-button>
         </div>
     </div>
-    <div class="tcon">
+    <div>
+        <i-table :columns="BSColumn" :data="BSData"></i-table>
+
+
     </div>
+    <Modal v-model="modalAdd" @@on-ok="addOk" title="添加回复命令" ok-text="确定" cancel-text="取消">
+        <Row>
+            <label>问题</label>
+            <el-input maxlength="500" v-model="addList.question" placeholder="请输入问题"></el-input>
+            <label>回复内容</label>
+            <el-input maxlength="500" v-model="addList.replycontent" placeholder="请输入回复内容"></el-input>
+        </Row>
+    </Modal>
+    <Modal v-model="modalModify" @@on-ok="modifyOk" title="编辑回复命令" ok-text="确定" cancel-text="取消">
+        <Row>
+            <label>问题</label>
+            <el-input maxlength="500" v-model="modifyList.question" placeholder="请输入问题"></el-input>
+            <label>回复内容</label>
+            <el-input maxlength="500" v-model="modifyList.replycontent" placeholder="请输入回复内容"></el-input>
+        </Row>
+    </Modal>
+
 </div>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 
 <script>
     Vue.http.options.emulateJSON = true;
@@ -23,6 +47,178 @@
         el: '#app',
         data: {
             modalAdd: false,
+            modalModify: false,
+            addList: {
+                question: '',
+                replycontent: '',
+                title: '',
+                index: '',
+            },
+            modifyList: {
+                question: '',
+                replycontent: '',
+                title: '',
+                index: '',
+            },
+            BSColumn: [
+                {
+                    title: '问题',
+                    key: 'Question',
+                },
+                {
+                    title: '回复内容',
+                    key: 'ReplyContent'
+                },
+                {
+                    title: '操作',
+                    key: 'action',
+                    width: 150,
+                    align: 'center',
+                    render: function (h, params) {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: function () {
+                                        app.modify(params.index)
+                                    }
+                                }
+                            }, '编辑'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: function () {
+                                        app.remove(params.index)
+                                    }
+                                }
+                            }, '删除')
+                        ]);
+                    }
+                }
+            ],
+            BSData: []
+        },
+        methods: {
+            modify: function (index) {
+                var selectedQuestion = this.BSData[index].Question;
+                var selectedReplyContent = this.BSData[index].ReplyContent;
+                this.modifyList.title = '编辑回复命令';
+                this.modifyList.question = selectedQuestion;
+                this.modifyList.replycontent = selectedReplyContent;
+                this.modifyList.index = index;
+                this.modalModify = true;
+                console.log(this.modifyList.question);
+                console.log(this.modifyList.replycontent);
+            },
+            modifyOk: function () {
+                debugger
+                if (this.modifyList.question == "" || this.modifyList.replycontent == "") {
+                    this.$Modal.error({
+                        title: "编辑失败",
+                        content: "请填写名称和单位"
+                    });
+                }
+                else {
+                    var selectedItem = app.BSData.slice(this.modifyList.index, this.modifyList.index + 1)[0];
+                    console.log(selectedItem)
+                    selectedItem.Question = this.modifyList.question;
+                    selectedItem.ReplyContent = this.modifyList.replycontent;
+                    this.$http.post('/CMS/UpdateAutoReplyInfo', { data: JSON.stringify(selectedItem) }).then(function (res) {
+                        if (res.body >= 0) {
+                            this.$Modal.success({
+                                title: "编辑成功",
+                                content: this.modifyList.question + '已编辑成功'
+                            });
+                            app.BSData[this.modifyList.question].Question = selectedItem.Question;
+                            app.BSData[this.modifyList.question].ReplyContent = selectedItem.ReplyContent;
+                        }
+                        else {
+                            this.$Modal.error({
+                                title: "编辑失败",
+                                content: this.modifyList.question + '编辑失败'
+                            });
+                        }
+                    }, function (error) { this.$Modal.error({ title: "编辑失败", content: '报错' }); });
+                }
+                this.modifyList.question = '';
+                this.modifyList.replycontent = '';
+                this.modifyList.title = '';
+                this.modifyList.index = '';
+            },
+            remove: function (index) {
+                var removeItem = app.BSData.slice(index, index + 1)[0];
+                removeItem.Flag = 1;
+                this.$http.post('/CMS/UpdateAutoReplyInfo', { data: JSON.stringify(removeItem) }).then(function (res) {
+                    if (res.body >= 0) {
+                        this.$Modal.success({
+                            title: "删除成功",
+                            content: removeItem.Question + '已删除成功'
+                        });
+                        this.BSData.splice(index, 1);
+                    }
+                    else {
+                        this.$Modal.error({
+                            title: "删除失败",
+                            content: removeItem.Question + '删除失败'
+                        });
+                    }
+                }, function (error) { this.$Modal.error({ title: "删除失败", content: '报错' }) });
+            },
+            addNewItem: function () {
+                this.addList.title = '添加回复命令';
+                this.addList.question = '';
+                this.addList.replycontent = '';
+                this.addList.title = '';
+                this.addList.index = '';
+                this.modalAdd = true;
+            },
+            addOk: function () {
+                if (this.addList.question == "" || this.addList.replycontent == "") {
+                    this.$Modal.error({
+                        title: "添加失败",
+                        content: "请填写名称和单位"
+                    });
+                }
+                else {
+                    this.$http.post('/CMS/AddNewAutoReplyInfo?question=' + this.addList.question + '&replaycontent=' + this.addList.replycontent).then(function (res) {
+                        if (res.body.status == 1) {
+
+                            this.$Modal.success({
+                                title: "添加成功",
+                                content: this.addList.question + '已添加成功'
+                            });
+                            app.BSData.push(res.body.data);
+                        }
+                        else {
+                            this.$Modal.error({
+                                title: "添加失败",
+                                content: this.addList.question + '添加失败'
+                            });
+                        }
+                    }, function (error) { this.$Modal.error({ title: "添加失败", content: '报错' }); });
+                }
+                this.addList.question = '';
+                this.addList.replycontent = '';
+                this.addList.title = '';
+                this.addList.index = '';
+            }
+        },
+        created: function () {
+            var that = this;
+            this.$http.get('/CMS/GetAutoReplyInfo').then(function (res) {
+                if (res.body.status == 1) {
+                    that.BSData = res.body.data;
+                }
+            });
         }
     })
 </script>

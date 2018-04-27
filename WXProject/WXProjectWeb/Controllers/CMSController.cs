@@ -7,6 +7,8 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using WXProjectWeb.App_Start;
+using WXProjectWeb.wcApi;
+using System.Runtime.Serialization.Json;
 
 namespace WXProjectWeb.Controllers
 {
@@ -51,8 +53,7 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public JsonResult GetAutoReplyInfo()
         {
-            var p = new List<Modal.AutoReply>();
-            p.Add(new Modal.AutoReply() { ID = 1, Question = "nihao", ReplyContent = "ni hao too!" });
+            var p = AutoReplyBLL.GetAutoReplyInfo();
             return Json(new { status = 1, data = p }, JsonRequestBehavior.AllowGet);
         }
 
@@ -64,10 +65,9 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public int UpdateAutoReplyInfo(string data)
         {
-
-            AutoReply bs = new AutoReply();
-
-            bs.ID = 1;
+            MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data));
+            DataContractJsonSerializer djs = new DataContractJsonSerializer(typeof(AutoReply));
+            AutoReply bs = (AutoReply)djs.ReadObject(ms);
             bs.ModifiedTime = DateTime.Now;
             return wcApi.AutoReplyBLL.UpdateAutoReplyInfo(bs);
         }
@@ -79,11 +79,11 @@ namespace WXProjectWeb.Controllers
         /// <returns></returns>
         public JsonResult AddNewAutoReplyInfo(string question, string replaycontent)
         {
-            
             AutoReply bs = new AutoReply();
-            bs.ID = 2;
-            bs.Question = "33";
-            bs.ReplyContent = "4444";
+            bs.Question = question;
+            bs.ReplyContent = replaycontent ;
+            bs.Flag = 0;
+            bs.CreatedTime = DateTime.Now;
             var p = wcApi.AutoReplyBLL.AddNewAutoReplyInfo(bs);
             return Json(new { status = 1, data = p });
         }

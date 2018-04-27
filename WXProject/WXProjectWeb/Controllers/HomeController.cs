@@ -285,6 +285,8 @@ namespace WXProjectWeb.Controllers
                         {
                             content = "合作请加微信号：xiaochaokefu";
                         }
+                        //获取后台添加的问答消息
+                        content = wcApi.AutoReplyBLL.GetContentbyQuestion(model.Content);
                         if (content == "")
                         {
                             return Content("");

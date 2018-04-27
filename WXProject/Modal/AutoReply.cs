@@ -25,11 +25,13 @@ namespace Modal
         [StringLength(200)]
         public string CreatedBy { get; set; }
 
-        public DateTime CreatedTime { get; set; }
+        public DateTime? CreatedTime { get; set; }
 
         [StringLength(200)]
         public string ModifiedBy { get; set; }
 
-        public DateTime ModifiedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
+
+        public int? Flag { get; set; }
     }
 }
