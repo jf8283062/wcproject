@@ -160,6 +160,7 @@
     <Compile Include="ImgCom\ImgCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="wcApi\AutoReplyBLL.cs" />
+    <Compile Include="wcApi\ButtonBLL.cs" />
     <Compile Include="wcApi\CommonBLL.cs" />
     <Compile Include="wcApi\DbHelperSQL.cs" />
     <Compile Include="wcApi\MediaBLL.cs" />
@@ -203,6 +204,7 @@
     <Content Include="img\getpica.jpg" />
     <Content Include="img\getpica1.jpg" />
     <Content Include="img\getpica2.jpg" />
+    <Content Include="img\icons%24ac4e4089.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -251,6 +253,10 @@
     <Content Include="Views\CMS\Login.cshtml" />
     <Content Include="Views\CMS\Index.cshtml" />
     <Content Include="Views\CMS\AutoReply.cshtml" />
+    <Content Include="Views\CMS\EditButton.cshtml" />
+    <Content Include="Views\CMS\EditBaseButton.cshtml" />
+    <Content Include="Views\CMS\EditSubButton.cshtml" />
+    <Content Include="Views\CMS\EditSubButtondetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

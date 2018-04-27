@@ -198,5 +198,8 @@ namespace WXProjectWeb.wcApi
 
         public DbSet<ShareCount> ShareCount { get; set; }
 
+        public DbSet<Button> Button { get; set; }
+
+
     }
 }

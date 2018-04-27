@@ -53,7 +53,7 @@
                         <li class="ivu-menu-item @if (ViewBag.Tab=="button")
 	{
 		@:ivu-menu-item-active ivu-menu-item-selected
-	} "><a href="/CMS/index">按钮设置 </a></li>
+	} "><a href="/CMS/EditButton">按钮设置 </a></li>
                         <li class="ivu-menu-item @if (ViewBag.Tab=="res")
 	{
 		@:ivu-menu-item-active ivu-menu-item-selected
@@ -63,7 +63,7 @@
             </div>
             <div class="ivu-col ivu-col-span-20">
                 <div class="wrapper-content ivu-article">
-                    <article>
+                    <article style="padding: 20px 0px;">
                         @RenderBody()
                     </article>
                 </div>
