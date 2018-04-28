@@ -4,14 +4,12 @@
             <th>编号</th>
             <th>名称</th>
             <th>事件</th>
-            <th>值</th>
             <th style="width:200px;">操作</th>
         </tr>
         <tr v-for="itemData in pageData">
             <td>{{itemData.id}}</td>
             <td>{{itemData.name}}</td>
             <td>{{itemData.type}}</td>
-            <td>{{itemData.value}}</td>
             <td>
                 <button type="button" v-show="itemData.type == 'base'" @@click="editSubbutton(itemData.id)" class="btn btn-xs btn-info">子菜单编辑</button>
                 <button type="button" @@click="edit(itemData.id)" class="btn btn-xs btn-info">修改</button>
@@ -70,7 +68,7 @@
             updateSERVER: function () {
                 var that = this;
                 this.$http.post('/WXCheck/WeiXin',
-                    { id: id }
+                    { time: Date() }
                 ).then(function (res) {
                     //if (res.body.status == 1) {
                     //    window.location.href = "/CMS/EditButton"
