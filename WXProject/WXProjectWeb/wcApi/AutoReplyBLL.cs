@@ -24,7 +24,7 @@ namespace WXProjectWeb.wcApi
         {
             using (EFDbContext db = new EFDbContext())
             {
-                return db.AutoReply.Where(o=>o.Flag==0).ToList();
+                return db.AutoReply.Where(o => o.Flag == 0).ToList();
             }
         }
 
@@ -76,17 +76,9 @@ namespace WXProjectWeb.wcApi
             string sendMsg = "";
             try
             {
-                string InstanceDataSQL1 = "select ReplyContent  from AutoReply  A  where  A.Question like '%" + question + "%' ";
-                DataSet ds = DbHelperSQL.Query("ConnectionStringh", InstanceDataSQL1);
-                int rows = ds.Tables[0].Rows.Count;
                 if (entityList.Count > 0)
                 {
-
-                    foreach (var  obj in entityList)
-                    {
-                        sendMsg += obj.ReplyContent + "\n";
-                        sendMsg += "-------------\n";
-                    }
+                    sendMsg += entityList[0].ReplyContent + "\n";
                 }
                 else
                 {
