@@ -1,0 +1,70 @@
+﻿<div id="app" class="container">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>编号</th>
+            <th>问题</th>
+            <th>回复类型</th>
+            <th>回复内容</th>
+            <th style="width:200px;">操作</th>
+        </tr>
+        <tr v-for="itemData in pageData">
+            <td>{{itemData.ID}}</td>
+            <td>{{itemData.Question}}</td>
+            <td>{{itemData.type}}</td>
+            <td v-if="itemData.type=='text'">{{itemData.ReplyContent}}</td>
+            <td v-else>
+            
+                <img id="imgPath1" height="120" width="180" v-bind:src="itemData.RoomImgPath"   />
+            </td>
+
+            <td>
+                <button type="button" @@click="edit(itemData.ID)" class="btn btn-xs btn-info">修改</button>
+                <button type="button" @@click="deletebtn(itemData.ID)" class="btn btn-xs btn-danger">删除</button>
+            </td>
+
+        </tr>
+    </table>
+    <div>
+        <button  type="button" @@click="add()" class="btn btn-xs btn-info">添加</button>
+    </div>
+</div>
+<script type="text/javascript">
+
+    Vue.http.options.emulateJSON = true;
+    Vue.http.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    };
+    var list = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.List));
+    var app = new Vue({
+        el: '#app',
+        data: {
+            pageData: list
+        },
+        methods: {
+            edit: function (id) {
+                window.location = "/CMS/EditBaseResponse/" + id;
+            },
+            deletebtn: function (id) {
+                var that = this;
+                this.$http.post('/CMS/deleteResponse',
+                    {id:id}
+                ).then(function (res) {
+                    if (res.body.status == 1) {
+                        window.location.href = "/CMS/EditResponse"
+                    } else {
+                        that.$Message.error('发生异常，或联系管理员!');
+                    }
+                }, function (erro) {
+                    that.$Message.error('发生异常，请稍后再试，或联系管理员!');
+
+                }).then(function (res) {
+
+                });
+            },
+            add: function () {
+                    window.location = "/CMS/EditBaseResponse/" + 0;
+                
+            }
+        }
+    })
+</script>

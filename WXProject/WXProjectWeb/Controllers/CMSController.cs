@@ -117,7 +117,7 @@ namespace WXProjectWeb.Controllers
             return View();
         }
 
-        #region
+        #region AutoReply
         [AuthorizeFilterAttribute]
         public ActionResult AutoReply()
         {
@@ -166,6 +166,99 @@ namespace WXProjectWeb.Controllers
             return Json(new { status = 1, data = p });
         }
 
+        #endregion
+
+
+        #region
+        [AuthorizeFilterAttribute]
+        public ActionResult EditResponse()
+        {
+
+            ViewBag.Tab = "response";
+            var list = AutoResponseBLL.GetBaseResponse();
+            ViewBag.List = list;
+            return View();
+
+            //ViewBag.Tab = "button";
+            //var list = new List<AutoResponse>();
+            //list.Add(new AutoResponse() { ID = 1, type="text", Question="question", ReplyContent="ansere1" });
+            //list.Add(new AutoResponse() { ID = 1, type = "image", Question = "question", ReplyContent = "ansere2", RoomImgPath= "../img/getpica2.jpg" });
+            //list.Add(new AutoResponse() { ID = 1, type = "image", Question = "question", ReplyContent = "ansere2", RoomImgPath = "/img/getpica2.jpg" });
+            //ViewBag.List = list;
+            //return View();
+        }
+
+
+        [AuthorizeFilterAttribute]
+        public ActionResult DeleteResponse(int id)
+        {
+            ViewBag.Tab = "autoresponse";
+            AutoResponseBLL.Delete(id);
+            return Json(new { status = 1 });
+        }
+
+
+        [AuthorizeFilterAttribute]
+        public ActionResult EditBaseResponse(int id)
+        {
+            ViewBag.Tab = "autoresponse";
+            var model = AutoResponseBLL.Get(id);
+            if (model == null)
+            {
+                model = new AutoResponse();
+            }
+            ViewBag.Entity = model;
+            return View();
+        }
+
+        [AuthorizeFilterAttribute]
+        public ActionResult PostResponseData(int id, string type, string Question, string ReplyContent, string RoomImgPath)
+        {
+            if (id != 0)
+            {
+                var item = AutoResponseBLL.Get(id);
+               
+                item.ReplyContent = ReplyContent;
+                item.type = type;
+                item.Question = Question;
+                item.RoomImgPath = RoomImgPath;
+
+                AutoResponseBLL.Modify(item);
+            }
+            else
+            {
+                var item = new AutoResponse();
+                item.RoomImgPath = RoomImgPath;
+                item.ReplyContent = ReplyContent;
+                item.type = type;
+                item.Question = Question;
+                AutoResponseBLL.Save(item);
+            }
+            return Json(new { status = 1 });
+        }
+
+        public JsonResult JsonFile()
+        {
+            string upPath = "/Upload/";  //上传文件路径
+            string fileContentType = Request.Files[0].ContentType;
+            string name = Request.Files[0].FileName;                  // 客户端文件路径
+
+            FileInfo file = new FileInfo(name);
+
+            string fileName = DateTime.Now.ToString("yyyyMMddhhmmssfff") + file.Extension; // 文件名称，当前时间（yyyyMMddhhmmssfff）
+            string webFilePath = Server.MapPath(upPath) + fileName;        // 服务器端文件路径
+            string FilePath = upPath + fileName;   //页面中使用的路径
+            int status = 1;
+            try
+            {
+                Request.Files[0].SaveAs(webFilePath);
+            }
+            catch (Exception ex)
+            {
+                status = 0;
+            }
+            return Json(new { filepath = FilePath, status = status });
+        }
         #endregion
     }
 }

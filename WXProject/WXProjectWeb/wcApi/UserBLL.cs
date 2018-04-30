@@ -152,7 +152,7 @@ namespace WXProjectWeb.wcApi
             {
                 var modal = db.ShareCount.Where(o => o.ID == shareCount.ID).FirstOrDefault();
                 modal.count = shareCount.count;
-                modal.type = shareCount.type;                
+                modal.type = shareCount.type;
                 int row = db.SaveChanges();
                 return modal;
             }
@@ -202,6 +202,6 @@ namespace WXProjectWeb.wcApi
 
         public DbSet<Button> Button { get; set; }
 
-
+        public DbSet<AutoResponse> AutoResponse { get; set; }
     }
 }

@@ -1,0 +1,147 @@
+﻿
+
+<div id="app" class="container">
+    <i-form ref="entity" :model="entity" label-position="right" :rules="ruleValidate" :label-width="200">
+        <Form-item label="问题" prop="Question">
+            <i-input v-model="entity.Question" style="width:50%"></i-input>
+        </Form-item>
+        <Form-item label="类型" prop="type">
+            <i-select @@on-change="change" v-model="entity.type" placeholder="请选择" style="width:200px">
+                <i-option v-for="item in selectData" :value="item.id" :key="item.id">{{ item.val }}</i-option>
+            </i-select>
+        </Form-item>
+        <Form-item  v-show="entity.type =='text'" label="回复内容" prop="value">
+            <i-input v-model="entity.ReplyContent" style="width:50%"></i-input>
+        </Form-item>
+        <Form-item v-show="entity.type =='image'" label="回复图片" >
+        
+                @*<img id="imgPath1" src="" />*@
+                <img height="120" width="180" v-bind:src="entity.RoomImgPath" />
+                <div style="">
+                    <Upload ref="upload"
+                            :format="['jpg']"
+                            :max-size="2048"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :on-success="handleSuccess"
+                            :on-remove="handleRemove"
+                            action="/CMS/JsonFile">
+
+                        <div id="divUpload1">
+                            <p style="color:#ff9900">上传 jpg 格式的图片,大小不能超过 2M</p>
+                            <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
+                        </div>
+                    </Upload>
+                </div>
+        </Form-item>
+        <Form-item>
+            <i-button type="primary" @@click="Submit('entity')" style="margin-left:180px">提交</i-button>
+            <i-button style="margin-left:50px" @@click="handleCancel()">取消</i-button>
+        </Form-item>
+    </i-form>
+</div>
+<script type="text/javascript">
+      Vue.http.options.emulateJSON = true;
+    Vue.http.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    };
+    var mode = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Entity));
+    var app = new Vue({
+        el: '#app',
+        data: {
+            selectData: [{ "id": "text", "val": "文本" }, { "id": "image", "val": "图片" }],
+            entity: mode,
+            ruleValidate: {
+                Question: [
+                    { required: true, message: '名称不能为空' }
+                ],
+                type: [
+                    { required: true, message: '类型不能为空' }
+                ]
+            },
+            isShow: true,
+            RoomImgPath:''
+        },
+        methods: {
+            change: function (item) {
+                if (item =='base') {
+                    this.isShow = false;
+                }
+            },
+            Submit: function (name) {
+                var that = this;
+                this.$refs[name].validate(function (valid) {
+                    if (valid) {
+                        that.entity.baseid = 0;
+                        that.postData();
+                    } else {
+                        //that.$Message.error('表单验证失败!');
+                    }
+                })
+            },
+            handleCancel: function () {
+                window.location.href = "/CMS/EditResponse"
+            },
+            postData: function () {
+                var that = this;
+                this.$http.post('/CMS/PostResponseData',
+                    that.entity
+                ).then(function (res) {
+                    if (res.body.status == 1) {
+                        that.$Message.info('保存成功!');
+                        window.location.href = "/CMS/EditResponse"
+                    } else {
+                        that.$Message.error('发生异常，或联系管理员!');
+                    }
+                }, function (erro) {
+                    that.$Message.error('发生异常，请稍后再试，或联系管理员!');
+
+                }).then(function (res) {
+
+                });
+            },
+            handleFormatError: function (file) {
+                //this.$Notice.warning({
+                //    title: '文件格式不正确',
+                //    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 格式的图片。'
+                //});
+                this.$Modal.warning({
+                    title: '文件格式不正确',
+                    content: '文件 ' + file.name + ' 格式不正确，请上传 jpg 格式的图片。'
+                });
+            },
+            handleSuccess: function (res, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                $("#divUpload1").css('display', 'none');
+                $("#imgPath1").css('display', 'block');
+                $("#imgPath1").css("height", 200);
+                $("#imgPath1").css("width", 200);
+                $("#imgPath1").attr('src', res.filepath);
+                var str = res.filepath;
+                str = str.substring(str.lastIndexOf("/") + 1);
+                str = str.substring(0, str.lastIndexOf("."));
+                //this.formCustom.RoomImgName = "/" + str + "-100-100";
+                this.RoomImgPath = res.filepath;
+                this.entity.RoomImgPath= res.filepath;
+            },
+            handleMaxSize: function (file) {
+                //this.$Notice.warning({
+                //    title: '超出文件大小限制',
+                //    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+                //});
+                this.$Modal.warning({
+                    title: '超出文件大小限制',
+                    content: '文件 ' + file.name + ' 太大，不能超过 2M。'
+                });
+            },
+            handleRemove: function (file) {
+                // 从 upload 实例删除数据
+                $("#divUpload1").css('display', 'block');
+                $("#imgPath1").css('display', 'none');
+                //$("#imgPath").attr('src', "");
+                //$("#imgPath").css("height",0);
+                //$("#imgPath").css("width",0);
+            },
+        }
+    });
+</script>

@@ -286,11 +286,15 @@ namespace WXProjectWeb.Controllers
                             content = "合作请加微信号：xiaochaokefu";
                         }
                         //获取后台添加的问答消息
-                        content = wcApi.AutoReplyBLL.GetContentbyQuestion(model.Content);
+                        AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion(model.Content);
                         if (content == "")
                         {
                             return Content("");
 
+                        }
+                        if (item.type == "text")
+                        {
+                            content = item.ReplyContent;
                         }
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                         {
@@ -298,6 +302,17 @@ namespace WXProjectWeb.Controllers
                             ToUserName = model.FromUserName,
                             Content = content
                         });
+
+                        if (item.type == "image")
+                        {
+                            var x = MediaBLL.UploadMultimedia(_token, "image",item.RoomImgPath);
+                            resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
+                            {
+                                FromUserName = model.ToUserName,
+                                ToUserName = model.FromUserName,
+                                MediaId = x
+                            });
+                        }
                         return Content(resStr);
                     }
 
@@ -402,5 +417,29 @@ namespace WXProjectWeb.Controllers
 
         }
 
+
+        public ActionResult Test3()
+        {
+            string media_id = "";
+            AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion("儿童节");
+
+            string _token = CommonBLL.GetAccess_token();
+
+            if (item.type == "image")
+            {
+                var x = MediaBLL.UploadMultimedia(_token, "image", item.RoomImgPath);
+                media_id = x;
+            }
+
+            var bgpath = AppDomain.CurrentDomain.BaseDirectory + item.RoomImgPath;
+            FileStream fs = new FileStream(bgpath, FileMode.Open);
+            byte[] data = new byte[fs.Length];
+            fs.Read(data, 0, data.Length);
+            fs.Close();
+            fs.Dispose();
+
+            var x1 = MediaBLL.UploadMultimedia(_token, "image","",data);
+            return Content(media_id);
+        }
     }
 }
