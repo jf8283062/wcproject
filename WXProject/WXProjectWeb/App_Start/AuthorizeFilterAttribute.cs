@@ -13,7 +13,7 @@ namespace WXProjectWeb.App_Start
         {
             if (filterContext.HttpContext.Request.Cookies.Get("user")==null)
             {
-                filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "CMS", action = "Login" }));
+                filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { Controller = "CMS", action = "EditButton" }));
             }
         }
     }
