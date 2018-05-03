@@ -11,7 +11,7 @@
             </i-select>
         </Form-item>
         <Form-item  v-show="entity.type =='text'" label="回复内容" prop="value">
-            <i-input v-model="entity.ReplyContent" style="width:50%"></i-input>
+            <i-input v-model="entity.ReplyContent" type="textarea" :rows="4" style="width:50%"></i-input>
         </Form-item>
         <Form-item v-show="entity.type =='image'" label="回复图片" >
         
