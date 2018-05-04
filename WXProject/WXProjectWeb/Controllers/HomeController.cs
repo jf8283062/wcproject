@@ -287,15 +287,16 @@ namespace WXProjectWeb.Controllers
                         }
                         //获取后台添加的问答消息
                         AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion(model.Content);
-                        if (content == "")
-                        {
-                            return Content("");
-
-                        }
                         if (item.type == "text")
                         {
                             content = item.ReplyContent;
                         }
+                        //if (content == "")
+                        //{
+                        //    return Content("");
+
+                        //}
+   
                         resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
                         {
                             FromUserName = model.ToUserName,
@@ -305,7 +306,16 @@ namespace WXProjectWeb.Controllers
 
                         if (item.type == "image")
                         {
-                            var x = MediaBLL.UploadMultimedia(_token, "image",item.RoomImgPath);
+                           var x_bgpath = Server.MapPath(item.RoomImgPath);
+
+                            FileStream fs = new FileStream(x_bgpath, FileMode.Open);
+                            byte[] x_data = new byte[fs.Length];
+                            fs.Read(x_data, 0, x_data.Length);
+                            fs.Close();
+                            fs.Dispose();
+
+                            var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", x_data);
+
                             resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ImageReuquest()
                             {
                                 FromUserName = model.ToUserName,
@@ -421,24 +431,33 @@ namespace WXProjectWeb.Controllers
         public ActionResult Test3()
         {
             string media_id = "";
-            AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion("儿童节");
+            AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion("劳动节");
 
             string _token = CommonBLL.GetAccess_token();
 
+            var bgpath = AppDomain.CurrentDomain.BaseDirectory + item.RoomImgPath;
+            bgpath = Server.MapPath(item.RoomImgPath);
+
             if (item.type == "image")
             {
-                var x = MediaBLL.UploadMultimedia(_token, "image", item.RoomImgPath);
+                var x = MediaBLL.UploadMultimedia(_token, "image", bgpath);
                 media_id = x;
             }
 
-            var bgpath = AppDomain.CurrentDomain.BaseDirectory + item.RoomImgPath;
+            ///获取临时素材
+            string path = HttpContext.Server.MapPath("~/img/");
+            MediaBLL.GetMultimedia(_token, media_id, path);
+
             FileStream fs = new FileStream(bgpath, FileMode.Open);
             byte[] data = new byte[fs.Length];
             fs.Read(data, 0, data.Length);
             fs.Close();
             fs.Dispose();
 
-            var x1 = MediaBLL.UploadMultimedia(_token, "image","",data);
+            var x1 = MediaBLL.UploadMultimedia(_token, "image","aa.jpg",data);
+            media_id = x1;
+           
+            MediaBLL.GetMultimedia(_token, media_id, path);
             return Content(media_id);
         }
     }

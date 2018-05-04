@@ -170,6 +170,7 @@ namespace WXProjectWeb.wcApi
             if (model != null)
             {
                 model.count = model.count + 1;
+                Update(model);
             }
             else
             {
@@ -180,9 +181,7 @@ namespace WXProjectWeb.wcApi
                     openid = useropenid
                 };
                 SaveShareCount(model);
-
             }
-            SaveShareCount(model);
 
             return model;
         }
