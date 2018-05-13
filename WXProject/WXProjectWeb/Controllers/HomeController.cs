@@ -84,97 +84,10 @@ namespace WXProjectWeb.Controllers
                                 //根据不同的活动添加/更新数据
                                 var count = user.count;
 
-
-                                string remarkvalue = "";
+                                
                                 #region 生成分享活动不同生成不同的回复
-                                switch (key)
-                                {
-                                    case "getpica":
-                                        if (count < 5)
-                                        {
-                                            remarkvalue = @"恭喜：
-您的好友" + fromUser.nickname + @"来支持你啦!
-亲,还需" + (5 - count) + @"位小伙伴扫码支持
-就可以免费领取价值千元的：
-【幼升小英语启蒙课：学字母记单词】";
 
-                                        }
-                                        else if (count == 5)
-                                        {
-                                            remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
-你是一位重视教育的好家长，
-孩子一定会越来越棒！
-
-幼升小英语启蒙课
-链接: https://pan.baidu.com/s/1o9e36l0 
-密码: i4ps
-
-
-后续我们还会提供更多实用的免费资料。
-
-提醒：
-1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
-2、建议转发完整地址到电脑上操作,手打地址容易出错。";
-                                        }
-                                        break;
-                                    case "getpica1":
-                                        if (count < 5)
-                                        {
-                                            remarkvalue = @"恭喜：
-您的好友" + fromUser.nickname + @"来支持你啦!
-亲,还需" + (5 - count) + @"位小伙伴扫码支持
-就可以免费领取：：
-【满分阅读51套答题公式】";
-
-                                        }
-                                        else if (count == 5)
-                                        {
-                                            remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
-你是一位重视教育的好家长，
-孩子一定会越来越棒！
-
-满分阅读51套答题公式
-链接：https://pan.baidu.com/s/1pLZbWpl 
-密码：7mot
-
-
-后续我们还会提供更多实用的免费资料。
-
-提醒：
-1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
-2、建议转发完整地址到电脑上操作,手打地址容易出错。";
-                                        }
-                                        break;
-                                    case "getpica2":
-                                        if (count < 5)
-                                        {
-                                            remarkvalue = @"恭喜：
-您的好友" + fromUser.nickname + @"来支持你啦!
-亲,还需" + (5 - count) + @"位小伙伴扫码支持
-就可以免费领取：：
-【苏教版小学语文资料】";
-
-                                        }
-                                        else if (count == 5)
-                                        {
-                                            remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
-你是一位重视教育的好家长，
-孩子一定会越来越棒！
-
-苏教版小学语文资料
-链接：https://pan.baidu.com/s/1VX-ujFY1dCKHm3S1vDVc7A 密码：bpaw
-
-
-后续我们还会提供更多实用的免费资料。
-
-提醒：
-1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
-2、建议转发完整地址到电脑上操作,手打地址容易出错。。";
-                                        }
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                string remarkvalue = CommonBLL.CreateSendFromMSG(key,count,fromUser);
                                 #endregion
                                 string content = CommonBLL.SendKeFuMsg(toUserOpenid, remarkvalue);
 
@@ -211,44 +124,28 @@ namespace WXProjectWeb.Controllers
                             fromUser.count = 0;
                             UserBLL.SaveUsers(fromUser);
                         }
-                        switch (model.EventKey)
+                        CommonBLL.SendWaitPicMsg(model, fromUser);
+
+                        if (model.EventKey == "huodong1")
                         {
-                            case "getpica":
-                                CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
-欢迎来到小学生微学习。
-正在为您生成专属任务海报。
+                            int count = UserBLL.FinishShareCount("huodong1");
+                            var setHongdong1Count= Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["huodong1"]);
+                            if (count >= setHongdong1Count)
+                            {
+                                resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                                {
+                                    FromUserName = model.ToUserName,
+                                    ToUserName = model.FromUserName,
+                                    Content = @"对不起，亲爱的；
 
-把海报分享给家长朋友，
-获5人扫码即可免费领取价值千元的【幼升小英语启蒙课】
+1000套0元包邮【一、二年级语文期末复习资料】已经被抢光了。如果您还需要，请留言给我们，超过100人留言，教研室就加印哦。
 
-我们郑重承诺：本活动真实有效。");
-                                break;
-                            case "getpica1":
-                                CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
-正在为您生成专属任务海报。
-
-把海报分享到朋友圈，
-获5人扫码即可免费领取经典资料【满分阅读51套答题公式】
-
-我们郑重承诺：本活动真实有效。");
-                                break;
-                            case "getpica2":
-                                CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
-正在为您生成领资料海报。
-
-把海报分享到朋友圈，获朋友扫码支持，
-即可免费领取苏教版语文资料。
-
-备注：
-如果不方便分享，也可以加老师xuexi005
-发资料名称，即可索取。
-因人多，老师回复慢，请见谅。
-我们郑重承诺：本活动真实有效。");
-                                break;
-                            default:
-                                break;
+心急的家长，也可以进入如下地址原价下单。https://pan.baidu.com/s/1o9e36l0"
+                                });
+                                return Content(resStr);
+                            }
                         }
-
+                       
                         var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName+"#"+ model.EventKey);
                         var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                         var touxiangStream = UserBLL.GetTouxiang(fromUser.headimgurl);
@@ -271,40 +168,21 @@ namespace WXProjectWeb.Controllers
                     //接受消息
                     else if (eventmodel is Modal.WeiXinEvent.TextMessage)
                     {
+                        #region 接收消息处理
                         Modal.WeiXinEvent.TextMessage model = eventmodel as Modal.WeiXinEvent.TextMessage;
                         string content = "";
-                        if (CommonBLL.dic.ContainsKey(model.Content))
-                        {
-                            content = CommonBLL.dic[model.Content];
-                        }
-                        if (model.Content.Contains("谢"))
-                        {
-                            content = "辛苦了 不客气，亲。";
-                        }
-                        if (model.Content.Contains("合作") || model.Content.Contains("广告") || model.Content.Contains("投放"))
-                        {
-                            content = "合作请加微信号：xiaochaokefu";
-                        }
                         //获取后台添加的问答消息
                         AutoResponse item = wcApi.AutoResponseBLL.GetContentbyQuestion(model.Content);
-                        if (item.type == "text")
+                        if (item!=null&&item.type == "text")
                         {
                             content = item.ReplyContent;
-                        }
-                        //if (content == "")
-                        //{
-                        //    return Content("");
-
-                        //}
-   
-                        resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
-                        {
-                            FromUserName = model.ToUserName,
-                            ToUserName = model.FromUserName,
-                            Content = content
-                        });
-
-                        if (item.type == "image")
+                            resStr = WXMethdBLL.ResponseMsg(new Modal.WeiXinRequest.ContentRequest()
+                            {
+                                FromUserName = model.ToUserName,
+                                ToUserName = model.FromUserName,
+                                Content = content
+                            });
+                        }else if (item != null && item.type == "image")
                         {
                            var x_bgpath = Server.MapPath(item.RoomImgPath);
 
@@ -323,7 +201,12 @@ namespace WXProjectWeb.Controllers
                                 MediaId = x
                             });
                         }
+                        else
+                        {
+                            resStr = "";
+                        }
                         return Content(resStr);
+                        #endregion
                     }
 
                 }

@@ -46,6 +46,7 @@
     <Compile Include="AutoResponse.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="BaseMsg.cs" />
+    <Compile Include="CouponTable.cs" />
     <Compile Include="ShareCount.cs" />
     <Compile Include="SubButton.cs" />
     <Compile Include="UserInfo.cs" />

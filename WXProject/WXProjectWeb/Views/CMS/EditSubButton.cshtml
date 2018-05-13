@@ -24,7 +24,7 @@
         </tr>
     </table>
     <div>
-        <button v-show="pageData.length<3" type="button" @@click="add()" class="btn btn-xs btn-info">添加</button>
+        <button v-show="pageData.length<5" type="button" @@click="add()" class="btn btn-xs btn-info">添加</button>
     </div>
 </div>
 <script type="text/javascript">
@@ -63,7 +63,7 @@
                 });
             },         
             add: function () {
-                if (this.pageData.length < 3) {
+                if (this.pageData.length < 5) {
                     window.location = "/CMS/EditSubButtondetail?baseid=" + mode.id;
                 }
             }

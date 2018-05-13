@@ -15,96 +15,7 @@ namespace WXProjectWeb.wcApi
 {
     public class CommonBLL
     {
-        public static Dictionary<string, string> dic = new Dictionary<string, string>() {
-               { "B103",@"后续我们会提供更多实用的资料。 
-
-人教版1-6年级语文上册期末测试卷+答案 ⑩
-链接：https://pan.baidu.com/s/1qZzwX4o 
-密码：abv5
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               {"A104",    @"后续我们会提供更多实用的资料。 
-
-人教版1-6年级数学上册期末测试卷+答案⑩
-链接：https://pan.baidu.com/s/1dlCvIu
-密码：56zy
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               {
-"B105",    @"后续我们会提供更多实用的资料。 
-
-外研版3-6年级英语上册期末测试卷+答案①
-链接：https://pan.baidu.com/s/1kWG2hIB 
-密码：vtre
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               { "A106",@"后续我们会提供更多实用的资料。 
-
-最全小学语文多音字汇总
-链接：https://pan.baidu.com/s/1mjx36Da 
-密码：v4qk
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B107",    @"后续我们会提供更多实用的资料。 
-
-小学生写人作文四大技巧+1-6年级范文
-链接：https://pan.baidu.com/s/1pNt9Syn 
-密码：11v5
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "A108",    @"后续我们会提供更多实用的资料。 
-
-全套故事情节梗概＋必考文学常识＋小初高重点考题任意两份】礼包！
-链接：https://pan.baidu.com/s/1i7nat3R 
-密码：y7hs
-
-注意：
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B109",    @"后续我们会提供更多实用的资料。
-
-1-9年级语文必背古诗文135篇（含音频）+出自《论语》中的成语
-详解链接：http://pan.baidu.com/s/1boQmcSB 
-密码：gnld
- 
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               {"A110",    @"后续我们会提供更多实用的资料。
-
-小学1-6年级奥数寒假班完整教材
-链接: https://pan.baidu.com/s/1nwJgG1z 
-密码: ewxn
-
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-               { "B111",    @"后续我们会提供更多实用的资料。
-
-海尼曼分级阅读【全套绘本PDF+配套音频+打印版】
-链接：https://pan.baidu.com/s/1snsk7Y9 
-密码：s8dp
-
- 注意： 
-1、资源7天有效期限，建议尽快转存到自己的网盘，如失效请加微信liruijuan628 
-2、首次点击可能报错，请再次点击，即可正常访问；建议用手机版QQ或网页版微信转发完整地址到电脑上。手打地址中间的大小写字母容易出错。"},
-
-               {"谢谢, 感谢, 谢了","辛苦了 不客气，亲。" },
-               {" 合作, 广告, 投放","  合作请加微信号：xiaochaokefu" }
-
-            };
+       
         public readonly static string Token = System.Configuration.ConfigurationManager.AppSettings["Token"];
         public readonly static string AppID = System.Configuration.ConfigurationManager.AppSettings["AppID"];
         public readonly static string Secret = System.Configuration.ConfigurationManager.AppSettings["Secret"];
@@ -113,6 +24,67 @@ namespace WXProjectWeb.wcApi
         /// 成员加入提醒模板
         /// </summary>
         public readonly static string Template_id = System.Configuration.ConfigurationManager.AppSettings["Template_id"];
+
+
+        public static void SendWaitPicMsg(Modal.WeiXinEvent.ClickEvent model, UserInfo fromUser)
+        {
+            switch (model.EventKey)
+            {
+                case "getpica":
+                    CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
+欢迎来到小学生微学习。
+正在为您生成专属任务海报。
+
+把海报分享给家长朋友，
+获5人扫码即可免费领取价值千元的【幼升小英语启蒙课】
+
+我们郑重承诺：本活动真实有效。");
+                    break;
+                case "getpica1":
+                    CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
+正在为您生成专属任务海报。
+
+把海报分享到朋友圈，
+获5人扫码即可免费领取经典资料【满分阅读51套答题公式】
+
+我们郑重承诺：本活动真实有效。");
+                    break;
+                case "getpica2":
+                    CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
+正在为您生成领资料海报。
+
+把海报分享到朋友圈，获朋友扫码支持，
+即可免费领取苏教版语文资料。
+
+备注：
+如果不方便分享，也可以加老师xuexi005
+发资料名称，即可索取。
+因人多，老师回复慢，请见谅。
+我们郑重承诺：本活动真实有效。");
+                    break;
+                //获取活动
+                case "huodong1":
+                    CommonBLL.SendKeFuMsg(model.FromUserName, fromUser.nickname + @"
+正在为您生成专属奖状。
+
+把奖状分享到家长群，
+1人扫码可获得1朵小红花，
+集齐10朵小红花，
+即可成为学习标兵，
+获得由教研室整理的纸质包邮资料
+【一、二年级语文期末复习资料】
+
+
+【教研室郑重承诺】：
+本活动真实有效
+老师们整理这套资料花了蛮多时间
+印刷质量也蛮好的
+希望对孩子有帮助");
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// 加密验证
@@ -146,6 +118,130 @@ namespace WXProjectWeb.wcApi
 
         }
 
+        public static string CreateSendFromMSG(string key, int count,UserInfo fromUser)
+        {
+            string remarkvalue = "";
+            switch (key)
+            {
+                case "getpica":
+                    if (count < 5)
+                    {
+                        remarkvalue = @"恭喜：
+您的好友" + fromUser.nickname + @"来支持你啦!
+亲,还需" + (5 - count) + @"位小伙伴扫码支持
+就可以免费领取价值千元的：
+【幼升小英语启蒙课：学字母记单词】";
+
+                    }
+                    else if (count == 5)
+                    {
+                        remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
+你是一位重视教育的好家长，
+孩子一定会越来越棒！
+
+幼升小英语启蒙课
+链接: https://pan.baidu.com/s/1o9e36l0 
+密码: i4ps
+
+
+后续我们还会提供更多实用的免费资料。
+
+提醒：
+1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
+2、建议转发完整地址到电脑上操作,手打地址容易出错。";
+                    }
+                    break;
+                case "getpica1":
+                    if (count < 5)
+                    {
+                        remarkvalue = @"恭喜：
+您的好友" + fromUser.nickname + @"来支持你啦!
+亲,还需" + (5 - count) + @"位小伙伴扫码支持
+就可以免费领取：：
+【满分阅读51套答题公式】";
+
+                    }
+                    else if (count == 5)
+                    {
+                        remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
+你是一位重视教育的好家长，
+孩子一定会越来越棒！
+
+满分阅读51套答题公式
+链接：https://pan.baidu.com/s/1pLZbWpl 
+密码：7mot
+
+
+后续我们还会提供更多实用的免费资料。
+
+提醒：
+1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
+2、建议转发完整地址到电脑上操作,手打地址容易出错。";
+                    }
+                    break;
+                case "getpica2":
+                    if (count < 5)
+                    {
+                        remarkvalue = @"恭喜：
+您的好友" + fromUser.nickname + @"来支持你啦!
+亲,还需" + (5 - count) + @"位小伙伴扫码支持
+就可以免费领取：：
+【苏教版小学语文资料】";
+
+                    }
+                    else if (count == 5)
+                    {
+                        remarkvalue = @"你的人缘不错噢，已经有5人来支持你。
+你是一位重视教育的好家长，
+孩子一定会越来越棒！
+
+苏教版小学语文资料
+链接：https://pan.baidu.com/s/1VX-ujFY1dCKHm3S1vDVc7A 密码：bpaw
+
+
+后续我们还会提供更多实用的免费资料。
+
+提醒：
+1、请尽快转存到自己的网盘，如失效请加学习助手微信xuexi005；
+2、建议转发完整地址到电脑上操作,手打地址容易出错。。";
+                    }
+                    break;
+                case "huodong1":
+                    if (count < 5)
+                    {
+                        remarkvalue = @"恭喜：
+您的好友某某某送你1朵小红花!
+还需9位家长扫码送花
+成为期末学习标兵
+获取由教研室整理的：
+【一、二年级语文期末复习资料】";
+                    }
+                    else if (count == 5)
+                    {
+                        remarkvalue = @"恭喜：你的人缘不错噢，
+已有10朵小红花。正式成为学习标兵！
+
+还有3步即可完成：
+1、请先复制右侧优惠码：*******
+2、进入如下地址，使用优惠码下单，即可1元包邮（为什么不是0元？请看下文）
+https://pan.baidu.com/s/1o9e36l0 
+3、加微信xuexi005,发送订单截图，值班老师发还1元红包给你。
+
+
+有疑问的看这里：
+【问】：为什么是1元包邮，不是0元吗？
+【答】：我们也很无奈，因为微店无法设置0元商品，所以1元下单后，请加老师的微信(xuexi005)，发订单截图，我们退还1元红包给你。顺便说一下，诸如为什么不直接设置1分钱售价等问题，我们都考虑过了，存在其它问题，感兴趣的牛爸牛妈可以一起探讨。
+
+【问】：为什么要在店里下单？
+【答】：因为教研室是一群老师，不是专业的互联网公司，没有能力开发送书管理系统。为了方便家长们跟踪快递，也为了方便教研室进行发货管理，我们直接使用了腾讯投资的微店系统。";
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+            return remarkvalue;
+        }
 
         public static Dictionary<string, DateTime> Access_token = null;
         /// <summary>

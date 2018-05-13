@@ -157,6 +157,20 @@ namespace WXProjectWeb.wcApi
                 return modal;
             }
         }
+
+        /// <summary>
+        /// 获取活动完成人数
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static int FinishShareCount(string type)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                return db.ShareCount.Where(o => o.type == type && o.count>4).Count();
+            }
+        }
+
         public static ShareCount GetUserShareCount(string useropenid, string type)
         {
             using (EFDbContext db = new EFDbContext())
