@@ -170,7 +170,13 @@ namespace WXProjectWeb.wcApi
                 return db.ShareCount.Where(o => o.type == type && o.count>4).Count();
             }
         }
-
+        public static CouponTable Coupon(string huodong, int v)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                return db.CouponTable.Where(o => o.HuoDong == huodong).Skip(v - 1).Take(1).FirstOrDefault();
+            }
+        }
         public static ShareCount GetUserShareCount(string useropenid, string type)
         {
             using (EFDbContext db = new EFDbContext())
@@ -214,6 +220,8 @@ namespace WXProjectWeb.wcApi
         public DbSet<AutoReply> AutoReply { get; set; }
 
         public DbSet<Button> Button { get; set; }
+
+        public DbSet<CouponTable> CouponTable { get; set; }
 
         public DbSet<AutoResponse> AutoResponse { get; set; }
     }

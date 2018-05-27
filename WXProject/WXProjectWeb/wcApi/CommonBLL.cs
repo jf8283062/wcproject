@@ -222,7 +222,7 @@ namespace WXProjectWeb.wcApi
 已有10朵小红花。正式成为学习标兵！
 
 还有3步即可完成：
-1、请先复制右侧优惠码：*******
+1、请先复制右侧优惠码：" + GetCouponTable("huodong1") + @"
 2、进入如下地址，使用优惠码下单，即可1元包邮（为什么不是0元？请看下文）
 https://pan.baidu.com/s/1o9e36l0 
 3、加微信xuexi005,发送订单截图，值班老师发还1元红包给你。
@@ -286,7 +286,20 @@ https://pan.baidu.com/s/1o9e36l0
             return access_token;
         }
 
+        public static string GetCouponTable(string huodong)
+        {
+            var count = UserBLL.FinishShareCount(huodong);
+            var model = UserBLL.Coupon(huodong, count + 1);
+            if (model != null)
+            {
+                return model.Coupon;
+            }
+            else
+            {
+                return "";
+            }
 
+        }
         /// <summary>根据URL获取信息
         /// 根据URL获取信息
         /// </summary>
