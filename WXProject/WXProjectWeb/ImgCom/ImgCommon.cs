@@ -19,7 +19,7 @@ namespace WXProjectWeb.ImgCom
         /// <param name="name">名字</param>
         /// <param name="content">内容</param>
         /// <returns>图像</returns>
-        public static byte[] AddWaterPic(Stream backgroundImgStream, Stream printingImgStream, Stream QRcodeImgStream, string name = null, string content = null)
+        public static byte[] AddWaterPic(Stream backgroundImgStream, Stream printingImgStream, Stream QRcodeImgStream,string huodong =null, string name = null, string content = null)
         {
             MemoryStream ms = new MemoryStream();
 
@@ -32,13 +32,25 @@ namespace WXProjectWeb.ImgCom
                     //将水印文件加载到内存中
                     using (Image printingImg = Image.FromStream(printingImgStream))
                     {
-                        var touxiang = printingImg.GetThumbnailImage(100, 100, null, IntPtr.Zero);
-                        g.DrawImage(touxiang, new Rectangle(40, 40, touxiang.Width, touxiang.Height));
+                        if (!string.IsNullOrEmpty(huodong)&& huodong =="huodong1")
+                        {
+                            
+                            var touxiang = printingImg.GetThumbnailImage(55, 55, null, IntPtr.Zero);
+                            g.DrawImage(touxiang, new Rectangle(30, 155, 55, 55));
+
+                        }
+                        else
+                        {
+                            var touxiang = printingImg.GetThumbnailImage(100, 100, null, IntPtr.Zero);
+                            g.DrawImage(touxiang, new Rectangle(40, 40, touxiang.Width, touxiang.Height));
+
+                        }
+
                     }
                     using (Image QRcodeImg = Image.FromStream(QRcodeImgStream))
                     {
-                        var QRcode = QRcodeImg.GetThumbnailImage(120, 120, null, IntPtr.Zero);
-                        g.DrawImage(QRcode, new Rectangle(backgroundImg.Width / 2 - QRcode.Width / 2, backgroundImg.Height - QRcode.Height - 100, QRcode.Width, QRcode.Height));
+                        var QRcode = QRcodeImg.GetThumbnailImage(100, 100, null, IntPtr.Zero);
+                        g.DrawImage(QRcode, new Rectangle(backgroundImg.Width / 2 - QRcode.Width / 2, backgroundImg.Height - QRcode.Height - 102, QRcode.Width, QRcode.Height));
 
                     }
                     if (!string.IsNullOrEmpty(name))

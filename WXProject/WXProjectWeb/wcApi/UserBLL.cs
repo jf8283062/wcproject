@@ -167,14 +167,14 @@ namespace WXProjectWeb.wcApi
         {
             using (EFDbContext db = new EFDbContext())
             {
-                return db.ShareCount.Where(o => o.type == type && o.count>4).Count();
+                return db.ShareCount.Where(o => o.type == type && o.count>9).Count();
             }
         }
         public static CouponTable Coupon(string huodong, int v)
         {
             using (EFDbContext db = new EFDbContext())
             {
-                return db.CouponTable.Where(o => o.HuoDong == huodong).Skip(v - 1).Take(1).FirstOrDefault();
+                return db.CouponTable.Where(o => o.HuoDong == huodong).OrderBy(o=>o.ID).Skip(v - 1).Take(1).FirstOrDefault();
             }
         }
         public static ShareCount GetUserShareCount(string useropenid, string type)
@@ -204,6 +204,14 @@ namespace WXProjectWeb.wcApi
             }
 
             return model;
+        }
+
+        public static CouponTable GetCoupon(int v)
+        {
+            using (EFDbContext db = new EFDbContext())
+            {
+                return db.CouponTable.Where(o=>o.ID==v).FirstOrDefault();
+            }
         }
     }
 

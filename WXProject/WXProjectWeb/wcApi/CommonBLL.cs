@@ -207,25 +207,25 @@ namespace WXProjectWeb.wcApi
                     }
                     break;
                 case "huodong1":
-                    if (count < 5)
+                    if (count < 10)
                     {
                         remarkvalue = @"恭喜：
-您的好友某某某送你1朵小红花!
-还需9位家长扫码送花
+您的好友" + fromUser.nickname + @"送你1朵小红花!
+还需" + (10 - count) + @"位家长扫码送花
 成为期末学习标兵
 获取由教研室整理的：
 【一、二年级语文期末复习资料】";
                     }
-                    else if (count == 5)
+                    else if (count == 10)
                     {
                         remarkvalue = @"恭喜：你的人缘不错噢，
 已有10朵小红花。正式成为学习标兵！
 
 还有3步即可完成：
-1、请先复制右侧优惠码：" + GetCouponTable("huodong1") + @"
+1、复制右侧优惠码：" + GetCouponTable("huodong1") + @"
 2、进入如下地址，使用优惠码下单，即可1元包邮（为什么不是0元？请看下文）
-https://pan.baidu.com/s/1o9e36l0 
-3、加微信xuexi005,发送订单截图，值班老师发还1元红包给你。
+https://weidian.com/item.html?itemID=2544959028
+3、加微信xuexi005,发送订单截图，值班老师发还1元红包给你
 
 
 有疑问的看这里：
@@ -290,6 +290,7 @@ https://pan.baidu.com/s/1o9e36l0
         {
             var count = UserBLL.FinishShareCount(huodong);
             var model = UserBLL.Coupon(huodong, count + 1);
+            //var model = UserBLL.GetCoupon(count + 1);
             if (model != null)
             {
                 return model.Coupon;

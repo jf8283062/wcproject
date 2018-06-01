@@ -100,13 +100,23 @@ namespace WXProjectWeb.Controllers
                             FromUserName = model.ToUserName,
                             ToUserName = model.FromUserName,
                             Content = @"欢迎你，家长朋友。
+
 我们是一帮小学教育工作者，
+
 工作之余，
+
 在这里分享教育心得。
 
+
+
 领取提示：
-热门资料，点击底部菜单获取。
-其它资料，请回复相应的关键词获取。"
+
+热门资料，点击底部菜单获取
+
+其它资料，回复相应关键词获取
+
+期末纸质复习资料，点击查看攻略。
+https://mp.weixin.qq.com/s/K6nLrhjsrEpZujsrUuffQA"
                         });
                         return Content(resStr);
 
@@ -140,7 +150,7 @@ namespace WXProjectWeb.Controllers
 
 1000套0元包邮【一、二年级语文期末复习资料】已经被抢光了。如果您还需要，请留言给我们，超过100人留言，教研室就加印哦。
 
-心急的家长，也可以进入如下地址原价下单。https://pan.baidu.com/s/1o9e36l0"
+心急的家长，也可以进入如下地址原价下单。https://weidian.com/item.html?itemID=2544959028"
                                 });
                                 return Content(resStr);
                             }
@@ -149,7 +159,16 @@ namespace WXProjectWeb.Controllers
                         var ticket = QrcodeBLL.Get_QR_STR_SCENE_Qrcode(_token, model.FromUserName+"#"+ model.EventKey);
                         var QrStream = QrcodeBLL.GetQrcodeStream(ticket);
                         var touxiangStream = UserBLL.GetTouxiang(fromUser.headimgurl);
-                        var bg = ImgCom.ImgCommon.AddWaterPic(ImgCom.ImgCommon.GetBGImgMemoryStream(model.EventKey), touxiangStream, QrStream, null, "我领取了");
+                        byte[] bg = null;
+                        if (model.EventKey == "huodong1")
+                        {
+                             bg = ImgCom.ImgCommon.AddWaterPic(ImgCom.ImgCommon.GetBGImgMemoryStream(model.EventKey), touxiangStream, QrStream, "huodong1", null, "");
+                        }
+                        else
+                        {
+                             bg = ImgCom.ImgCommon.AddWaterPic(ImgCom.ImgCommon.GetBGImgMemoryStream(model.EventKey), touxiangStream, QrStream,null, null, "我领取了");
+
+                        }
                         var x = MediaBLL.UploadMultimedia(_token, "image", model.ToUserName + ".jpg", bg);
 
 
@@ -342,6 +361,15 @@ namespace WXProjectWeb.Controllers
            
             MediaBLL.GetMultimedia(_token, media_id, path);
             return Content(media_id);
+        }
+
+
+        public ActionResult Test4()
+        {
+            int count = UserBLL.FinishShareCount("huodong1");
+            var setHongdong1Count = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["huodong1"]);
+
+            return Content("count:"+count +  "    hond:"+setHongdong1Count);
         }
     }
 }
