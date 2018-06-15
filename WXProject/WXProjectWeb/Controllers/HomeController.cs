@@ -112,11 +112,7 @@ namespace WXProjectWeb.Controllers
 领取提示：
 
 热门资料，点击底部菜单获取
-
-其它资料，回复相应关键词获取
-
-期末纸质复习资料，点击查看攻略。
-https://mp.weixin.qq.com/s/K6nLrhjsrEpZujsrUuffQA"
+其它资料，回复相应关键词获取"
                         });
                         return Content(resStr);
 
@@ -150,7 +146,7 @@ https://mp.weixin.qq.com/s/K6nLrhjsrEpZujsrUuffQA"
 
 1000套0元包邮【一、二年级语文期末复习资料】已经被抢光了。如果您还需要，请留言给我们，超过100人留言，教研室就加印哦。
 
-心急的家长，也可以进入如下地址原价下单。https://weidian.com/item.html?itemID=2544959028"
+心急的家长，也可以进入如下地址原价下单。https://weidian.com/?userid=880432647"
                                 });
                                 return Content(resStr);
                             }

@@ -224,7 +224,7 @@ namespace WXProjectWeb.wcApi
 还有3步即可完成：
 1、复制右侧优惠码：" + GetCouponTable("huodong1") + @"
 2、进入如下地址，使用优惠码下单，即可1元包邮（为什么不是0元？请看下文）
-https://weidian.com/item.html?itemID=2544959028
+https://weidian.com/?userid=880432647
 3、加微信xuexi005,发送订单截图，值班老师发还1元红包给你
 
 
